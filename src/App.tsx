@@ -1,9 +1,10 @@
 import './App.css';
+import Signup from './components/pages/signup';
 
 function App() {
   return (
     <>
-      <h1>realworld</h1>
+      <Signup />
     </>
   );
 }
