@@ -30,13 +30,8 @@ const userApi = {
     return response;
   },
 
-  login: (userData: ILoginUserData): Promise<AxiosResponse<IGlobalUserData>> => {
-    const response = Axios.post('/users/login', {
-      user: {
-        email: userData.email,
-        password: userData.password,
-      },
-    });
+  login: (userData: { user: ILoginUserData }): Promise<AxiosResponse<IGlobalUserData>> => {
+    const response = Axios.post('/users/login', userData);
     return response;
   },
 };
