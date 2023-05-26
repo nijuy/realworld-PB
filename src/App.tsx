@@ -29,18 +29,3 @@ function App() {
 }
 
 export default App;
-
-{
-  /* Home page (URL: /#/ )
-
-Sign in/Sign up pages (URL: /#/login, /#/register )
-
-Settings page (URL: /#/settings )
-
-Editor page to create/edit articles (URL: /#/editor, /#/editor/article-slug-here )
-
-Article page (URL: /#/article/article-slug-here )
-
-Profile page (URL: /#/profile/:username, /#/profile/:username/favorites )
- */
-}
