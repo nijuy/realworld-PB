@@ -3,22 +3,26 @@ const Header = () => {
 
   return (
     <>
-      <div>
-        <img></img>
-        <span>Header</span>
-      </div>
-      <nav>
-        <ul>
-          {headerMenu.map((headerMenuData) => (
-            <li
-              onClick={() => {
-                alert(headerMenuData);
-              }}
-            >
-              {headerMenuData}
-            </li>
-          ))}
-        </ul>
+      <nav className="navbar navbar-light">
+        <div className="container">
+          <a className="navbar-brand" href="index.html">
+            conduit
+          </a>
+          <ul className="nav navbar-nav pull-xs-right">
+            {headerMenu.map((headerMenuData) => (
+              <li
+                className="nav-item"
+                onClick={() => {
+                  alert(headerMenuData);
+                }}
+              >
+                <a className="nav-link" href="">
+                  <i className="ion-compose"></i>&nbsp;{headerMenuData}{' '}
+                </a>
+              </li>
+            ))}
+          </ul>
+        </div>
       </nav>
     </>
   );
