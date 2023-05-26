@@ -1,33 +1,44 @@
 import { Axios } from './api';
-import { IJoinUserData, IEditUserData, IGlobalUserData } from './types/userApi.type';
+import { AxiosResponse } from 'axios';
+import {
+  IJoinUserData,
+  IEditUserData,
+  IGlobalUserData,
+  ILoginUserData,
+} from './types/userApi.type';
 
-export const getUser = async () => {
-  const response = await Axios.get<IGlobalUserData>('/user');
-  return response.data;
+const userApi = {
+  get: () => {
+    const response = Axios.get<IGlobalUserData>('/user');
+    return response;
+  },
+  modify: () => {
+    const response = Axios.put<IEditUserData>('/user', {
+      user: {
+        email: 'string',
+        password: 'string',
+        username: 'string',
+        bio: 'string',
+        image: 'string',
+      },
+    });
+    return response;
+  },
+
+  join: (userData: { user: IJoinUserData }) => {
+    const response = Axios.post<IJoinUserData, IGlobalUserData>('/users', userData);
+    return response;
+  },
+
+  login: (userData: ILoginUserData): Promise<AxiosResponse<IGlobalUserData>> => {
+    const response = Axios.post('/users/login', {
+      user: {
+        email: userData.email,
+        password: userData.password,
+      },
+    });
+    return response;
+  },
 };
 
-export const setUser = async () => {
-  const response = await Axios.put<IEditUserData>('/user', {
-    user: {
-      email: 'string',
-      password: 'string',
-      username: 'string',
-      bio: 'string',
-      image: 'string',
-    },
-  });
-  return response.data;
-};
-
-export const joinUser = async (user: IJoinUserData) => {
-  const response = await Axios.post<IJoinUserData, IGlobalUserData>('/users', {
-    user: {
-      username: user.username,
-      email: user.email,
-      password: user.password,
-    },
-  });
-
-  console.log(response);
-  //   return response.data;
-};
+export default userApi;

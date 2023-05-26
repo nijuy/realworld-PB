@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from 'react';
 import Layout from '../layout/Layout';
-import { joinUser } from '../../api/userApi';
+import userApi from '../../api/userApi';
 import { IJoinUserData } from '../../api/types/userApi.type';
 
 const Signup = () => {
@@ -47,11 +47,13 @@ const Signup = () => {
     });
 
     const test = {
-      username: 'dsafkjlncsbtjkvla;emvlnbkhfdjsla;ml',
-      email: 'aaadfasdjfsnjaweokjfwaw@gmail.com',
-      password: '123sdjflknfaiej',
+      username: 'indianapoylylyl',
+      email: 'hyeonlimgo5@gmail.com',
+      password: 'tiehdn1300',
     };
-    joinUser(test);
+
+    const test2 = userApi.join({ user: test });
+    console.log(test2);
   }, []);
 
   useEffect(() => {
