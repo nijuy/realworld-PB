@@ -11,6 +11,9 @@ interface ISigninError extends IError {
 
 const Signin = () => {
   const [signinData, setSigninData] = useState<ILoginUserData>();
+  /**
+   * @수정사항 나중에 리코일로 관리할 값
+   */
   const [signinResponseData, setSigninResponseData] = useState<IGlobalUserData>();
   const [signinStatusData, setSigninStatusData] = useState<ISigninError>();
 
@@ -29,7 +32,6 @@ const Signin = () => {
         email: emailRef.current.value,
         password: passwordRef.current.value,
       });
-      login();
     }
   };
 
@@ -52,10 +54,14 @@ const Signin = () => {
   };
 
   useEffect(() => {
-    if (false) {
+    if (signinResponseData) {
       navigate('/');
     }
-  }, []);
+  }, [signinResponseData]);
+
+  useEffect(() => {
+    login();
+  }, [signinData]);
 
   return (
     <>
@@ -68,9 +74,11 @@ const Signin = () => {
                 <a href="">Need an account?</a>
               </p>
 
-              <ul className="error-messages">
-                <li>That email is already taken</li>
-              </ul>
+              {signinStatusData && !signinStatusData.signinStatus && (
+                <ul className="error-messages">
+                  <li>{'email or password ' + signinStatusData.errors['email or password']}</li>
+                </ul>
+              )}
 
               <form>
                 <fieldset className="form-group">
