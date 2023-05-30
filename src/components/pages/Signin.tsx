@@ -1,10 +1,18 @@
 import { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import userApi from '../../api/userApi';
-import { ILoginUserData } from '../../api/types/userApi.type';
+import { ILoginUserData, IGlobalUserData } from '../../types/userApi.type';
+import { AxiosError } from 'axios';
+import { IError } from '../../types/error.type';
+
+interface ISigninError extends IError {
+  signinStatus: boolean;
+}
 
 const Signin = () => {
   const [signinData, setSigninData] = useState<ILoginUserData>();
+  const [signinResponseData, setSigninResponseData] = useState<IGlobalUserData>();
+  const [signinStatusData, setSigninStatusData] = useState<ISigninError>();
 
   const navigate = useNavigate();
 
@@ -29,10 +37,17 @@ const Signin = () => {
     try {
       if (signinData !== undefined) {
         const response = await userApi.login({ user: signinData });
-        console.log(response.data);
+        setSigninResponseData(response.data);
       }
-    } catch (e) {
-      console.log(e);
+    } catch (error) {
+      const signinError = error as AxiosError;
+      if (signinError.response !== undefined && signinError.response.data !== null) {
+        const response = signinError.response.data as IError;
+        setSigninStatusData({
+          signinStatus: false,
+          errors: response.errors,
+        });
+      }
     }
   };
 
