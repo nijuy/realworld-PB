@@ -1,3 +1,5 @@
 export interface IError {
-  errors: string[];
+  errors: {
+    'email or password': string[];
+  };
 }
