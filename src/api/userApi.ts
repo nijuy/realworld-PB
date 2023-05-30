@@ -5,7 +5,7 @@ import {
   IEditUserData,
   IGlobalUserData,
   ILoginUserData,
-} from './types/userApi.type';
+} from '../types/userApi.type';
 
 const userApi = {
   get: () => {

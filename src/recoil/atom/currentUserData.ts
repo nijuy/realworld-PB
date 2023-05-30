@@ -1,5 +1,5 @@
 import { atom } from 'recoil';
-import { IGlobalUserData } from '../../api/types/userApi.type';
+import { IGlobalUserData } from '../../types/userApi.type';
 
 export const currentUserState = atom<IGlobalUserData>({
   key: 'currentUserState',

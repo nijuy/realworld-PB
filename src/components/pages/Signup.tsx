@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect } from 'react';
 import Layout from '../layout/Layout';
 import userApi from '../../api/userApi';
-import { IJoinUserData } from '../../api/types/userApi.type';
+import { IJoinUserData } from '../../types/userApi.type';
 
 const Signup = () => {
   const [signupData, setSignupData] = useState<IJoinUserData>();
