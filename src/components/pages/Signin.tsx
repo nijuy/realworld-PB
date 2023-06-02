@@ -5,6 +5,9 @@ import { ILoginUserData, IGlobalUserData } from '../../types/userApi.type';
 import { AxiosError } from 'axios';
 import { IError } from '../../types/error.type';
 import ErrorPrint from '../ErrorPrint';
+import Layout from '../layout/Layout';
+import { useRecoilState } from 'recoil';
+import { currentUserState } from '../../recoil/atom/currentUserData';
 
 interface ISigninError extends IError {
   signinStatus: boolean;
@@ -15,10 +18,8 @@ const Signin = () => {
     email: '',
     password: '',
   };
-  /**
-   * @수정사항 나중에 리코일로 관리할 값
-   */
-  const [signinResponseData, setSigninResponseData] = useState<IGlobalUserData>();
+  const [signinResponseData, setSigninResponseData] =
+    useRecoilState<IGlobalUserData>(currentUserState);
   const [signinStatusData, setSigninStatusData] = useState<ISigninError>();
 
   const navigate = useNavigate();
@@ -54,56 +55,58 @@ const Signin = () => {
   };
 
   useEffect(() => {
-    if (signinResponseData) {
+    if (signinResponseData.token !== '') {
       navigate('/');
     }
   }, [signinResponseData]);
 
   return (
     <>
-      <div className="auth-page">
-        <div className="container page">
-          <div className="row">
-            <div className="col-md-6 offset-md-3 col-xs-12">
-              <h1 className="text-xs-center">Sign in</h1>
-              <p className="text-xs-center">
-                <a href="">Need an account?</a>
-              </p>
+      <Layout>
+        <div className="auth-page">
+          <div className="container page">
+            <div className="row">
+              <div className="col-md-6 offset-md-3 col-xs-12">
+                <h1 className="text-xs-center">Sign in</h1>
+                <p className="text-xs-center">
+                  <a href="/#/register">Need an account?</a>
+                </p>
 
-              {signinStatusData && !signinStatusData.signinStatus && (
-                <ul className="error-messages">
-                  <ErrorPrint errors={signinStatusData.errors} />
-                </ul>
-              )}
+                {signinStatusData && !signinStatusData.signinStatus && (
+                  <ul className="error-messages">
+                    <ErrorPrint errors={signinStatusData.errors} />
+                  </ul>
+                )}
 
-              <form>
-                <fieldset className="form-group">
-                  <input
-                    className="form-control form-control-lg"
-                    type="text"
-                    placeholder="Email"
-                    ref={emailRef}
-                  />
-                </fieldset>
-                <fieldset className="form-group">
-                  <input
-                    className="form-control form-control-lg"
-                    type="password"
-                    placeholder="Password"
-                    ref={passwordRef}
-                  />
-                </fieldset>
-                <button
-                  className="btn btn-lg btn-primary pull-xs-right"
-                  onClick={onClickSigninData}
-                >
-                  Sign in
-                </button>
-              </form>
+                <form>
+                  <fieldset className="form-group">
+                    <input
+                      className="form-control form-control-lg"
+                      type="text"
+                      placeholder="Email"
+                      ref={emailRef}
+                    />
+                  </fieldset>
+                  <fieldset className="form-group">
+                    <input
+                      className="form-control form-control-lg"
+                      type="password"
+                      placeholder="Password"
+                      ref={passwordRef}
+                    />
+                  </fieldset>
+                  <button
+                    className="btn btn-lg btn-primary pull-xs-right"
+                    onClick={onClickSigninData}
+                  >
+                    Sign in
+                  </button>
+                </form>
+              </div>
             </div>
           </div>
         </div>
-      </div>
+      </Layout>
     </>
   );
 };
