@@ -1,5 +1,8 @@
 import { atom } from 'recoil';
-import { IGlobalUserData } from '../../api/types/userApi.type';
+import { IGlobalUserData } from '../../types/userApi.type';
+import { recoilPersist } from 'recoil-persist';
+
+const { persistAtom } = recoilPersist();
 
 export const currentUserState = atom<IGlobalUserData>({
   key: 'currentUserState',
@@ -10,6 +13,7 @@ export const currentUserState = atom<IGlobalUserData>({
     bio: '',
     image: '',
   },
+  effects_UNSTABLE: [persistAtom],
 });
 
 export const loggedState = atom<boolean>({
