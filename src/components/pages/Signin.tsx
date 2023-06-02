@@ -4,13 +4,17 @@ import userApi from '../../api/userApi';
 import { ILoginUserData, IGlobalUserData } from '../../types/userApi.type';
 import { AxiosError } from 'axios';
 import { IError } from '../../types/error.type';
+import ErrorPrint from '../ErrorPrint';
 
 interface ISigninError extends IError {
   signinStatus: boolean;
 }
 
 const Signin = () => {
-  const [signinData, setSigninData] = useState<ILoginUserData>();
+  let signinData: ILoginUserData = {
+    email: '',
+    password: '',
+  };
   /**
    * @수정사항 나중에 리코일로 관리할 값
    */
@@ -25,22 +29,18 @@ const Signin = () => {
   const onClickSigninData = (buttonEvent: React.MouseEvent<HTMLButtonElement>) => {
     buttonEvent.preventDefault();
     if (emailRef.current !== null && passwordRef.current !== null) {
-      if (emailRef.current.value === '' || passwordRef.current.value === '') {
-        alert('!');
-      }
-      setSigninData({
+      signinData = {
         email: emailRef.current.value,
         password: passwordRef.current.value,
-      });
+      };
+      login(signinData);
     }
   };
 
-  const login = async () => {
+  const login = async (signinData: ILoginUserData) => {
     try {
-      if (signinData !== undefined) {
-        const response = await userApi.login({ user: signinData });
-        setSigninResponseData(response.data);
-      }
+      const response = await userApi.login({ user: signinData });
+      setSigninResponseData(response.data);
     } catch (error) {
       const signinError = error as AxiosError;
       if (signinError.response !== undefined && signinError.response.data !== null) {
@@ -59,10 +59,6 @@ const Signin = () => {
     }
   }, [signinResponseData]);
 
-  useEffect(() => {
-    login();
-  }, [signinData]);
-
   return (
     <>
       <div className="auth-page">
@@ -76,7 +72,7 @@ const Signin = () => {
 
               {signinStatusData && !signinStatusData.signinStatus && (
                 <ul className="error-messages">
-                  <li>{'email or password ' + signinStatusData.errors['email or password']}</li>
+                  <ErrorPrint errors={signinStatusData.errors} />
                 </ul>
               )}
 
