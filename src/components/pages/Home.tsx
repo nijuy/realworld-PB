@@ -1,6 +1,19 @@
 import Layout from '../layout/Layout';
+import tagApi from '../../api/tagApi';
 
 const Home = () => {
+  let tags: string[] = [];
+
+  const getTag = async () => {
+    try {
+      const response = await tagApi.get();
+      tags = response.data.tags;
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  getTag();
+
   return (
     <Layout>
       <div className="home-page">
@@ -79,30 +92,13 @@ const Home = () => {
                 <p>Popular Tags</p>
 
                 <div className="tag-list">
-                  <a href="" className="tag-pill tag-default">
-                    programming
-                  </a>
-                  <a href="" className="tag-pill tag-default">
-                    javascript
-                  </a>
-                  <a href="" className="tag-pill tag-default">
-                    emberjs
-                  </a>
-                  <a href="" className="tag-pill tag-default">
-                    angularjs
-                  </a>
-                  <a href="" className="tag-pill tag-default">
-                    react
-                  </a>
-                  <a href="" className="tag-pill tag-default">
-                    mean
-                  </a>
-                  <a href="" className="tag-pill tag-default">
-                    node
-                  </a>
-                  <a href="" className="tag-pill tag-default">
-                    rails
-                  </a>
+                  {tags.map((tagData) => {
+                    return (
+                      <a href="" className="tag-pill tag-default">
+                        {tagData}
+                      </a>
+                    );
+                  })}
                 </div>
               </div>
             </div>
