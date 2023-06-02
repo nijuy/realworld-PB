@@ -9,9 +9,10 @@ const Header = () => {
             conduit
           </a>
           <ul className="nav navbar-nav pull-xs-right">
-            {headerMenu.map((headerMenuData) => (
+            {headerMenu.map((headerMenuData, index) => (
               <li
                 className="nav-item"
+                key={index}
                 onClick={() => {
                   alert(headerMenuData);
                 }}
