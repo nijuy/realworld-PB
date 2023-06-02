@@ -8,8 +8,8 @@ const ErrorPrint = ({ errors }: IError) => {
   }
   return (
     <>
-      {errorMessages.map((errorMessagesData) => (
-        <li> {errorMessagesData} </li>
+      {errorMessages.map((errorMessagesData, index) => (
+        <li key={index}> {errorMessagesData} </li>
       ))}
     </>
   );
