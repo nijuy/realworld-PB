@@ -1,5 +1,20 @@
+import { useRecoilState } from 'recoil';
+import { currentUserState } from '../../recoil/atom/currentUserData';
+
 const Header = () => {
-  const headerMenu = ['Home', 'New Post', 'Settings', 'Sign Up', 'Sign In'];
+  const [user, setUser] = useRecoilState(currentUserState);
+
+  const logout = () => {
+    setUser({
+      user: {
+        username: '',
+        email: '',
+        token: '',
+        bio: '',
+        image: '',
+      },
+    });
+  };
 
   return (
     <>
@@ -9,19 +24,49 @@ const Header = () => {
             conduit
           </a>
           <ul className="nav navbar-nav pull-xs-right">
-            {headerMenu.map((headerMenuData, index) => (
-              <li
-                className="nav-item"
-                key={index}
-                onClick={() => {
-                  alert(headerMenuData);
-                }}
-              >
-                <a className="nav-link" href="">
-                  <i className="ion-compose"></i>&nbsp;{headerMenuData}{' '}
-                </a>
-              </li>
-            ))}
+            <li className="nav-item">
+              <a className="nav-link active" href="">
+                Home
+              </a>
+            </li>
+            {user.token !== '' ? (
+              <>
+                <li className="nav-item">
+                  <a className="nav-link" href="/#/editor">
+                    <i className="ion-compose"></i>&nbsp;New Article
+                  </a>
+                </li>
+                <li className="nav-item">
+                  <a className="nav-link" href="/#/settings">
+                    <i className="ion-gear-a"></i>&nbsp;Settings
+                  </a>
+                </li>
+                <li className="nav-item" onClick={logout}>
+                  <a className="nav-link" href="">
+                    <img className="user-pic" src={user.image} ng-src={user.image} />
+                    &nbsp;{user.username}
+                  </a>
+                </li>
+                <li className="nav-item" onClick={logout}>
+                  <a className="nav-link" href="">
+                    <i className="ion-gear-a"></i>&nbsp;Log out
+                  </a>
+                </li>
+              </>
+            ) : (
+              <>
+                <li className="nav-item">
+                  <a className="nav-link" href="/#/login">
+                    Sign in
+                  </a>
+                </li>
+                <li className="nav-item">
+                  <a className="nav-link" href="/#/register">
+                    Sign up
+                  </a>
+                </li>
+              </>
+            )}
           </ul>
         </div>
       </nav>
