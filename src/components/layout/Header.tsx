@@ -29,7 +29,7 @@ const Header = () => {
                 Home
               </a>
             </li>
-            {user.token !== '' ? (
+            {user.user.token !== '' ? (
               <>
                 <li className="nav-item">
                   <a className="nav-link" href="/#/editor">
@@ -43,8 +43,8 @@ const Header = () => {
                 </li>
                 <li className="nav-item" onClick={logout}>
                   <a className="nav-link" href="">
-                    <img className="user-pic" src={user.image} ng-src={user.image} />
-                    &nbsp;{user.username}
+                    <img className="user-pic" src={user.user.image} ng-src={user.user.image} />
+                    &nbsp;{user.user.username}
                   </a>
                 </li>
                 <li className="nav-item" onClick={logout}>
