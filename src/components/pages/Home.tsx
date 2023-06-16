@@ -1,6 +1,7 @@
 import Layout from '../layout/Layout';
 import tagApi from '../../api/tagApi';
 import { useQuery } from '@tanstack/react-query';
+import { feedApi } from '../../api/articlesApi';
 
 const Home = () => {
   const { isLoading: tagIsLoading, data: tagData } = useQuery({
@@ -14,6 +15,21 @@ const Home = () => {
       }
     },
     options: {
+      staletime: 300000,
+    },
+  });
+
+  const { isLoading: feedIsLoading, data: feedData } = useQuery({
+    queryKey: ['feed'],
+    queryFn: async () => {
+      try {
+        const response = await feedApi.getGlobalFeed();
+        return response.data.articles;
+      } catch (error) {
+        console.log(error);
+      }
+    },
+    option: {
       staletime: 300000,
     },
   });
@@ -46,49 +62,44 @@ const Home = () => {
                 </ul>
               </div>
 
-              <div className="article-preview">
-                <div className="article-meta">
-                  <a href="profile.html">
-                    <img src="http://i.imgur.com/Qr71crq.jpg" />
-                  </a>
-                  <div className="info">
-                    <a href="" className="author">
-                      Eric Simons
+              {feedIsLoading ? (
+                <div> loading ... </div>
+              ) : (
+                feedData?.map((article, index) => (
+                  <div key={index} className="article-preview">
+                    <div className="article-meta">
+                      <a href="profile.html">
+                        <img src={article.author.image} />
+                      </a>
+                      <div className="info">
+                        <a href="" className="author">
+                          {article.author.username}
+                        </a>
+                        <span className="date">January 20th</span>
+                      </div>
+                      <button className="btn btn-outline-primary btn-sm pull-xs-right">
+                        <i className="ion-heart"></i> {article.favoritesCount}
+                      </button>
+                    </div>
+                    <a href="" className="preview-link">
+                      <h1>{article.title}</h1>
+                      <p>{article.description}</p>
+                      <span>Read more...</span>
+                      <ul className="tag-list">
+                        {article.tagList.map((tag, index) => (
+                          <li
+                            key={index}
+                            className="tag-default tag-pill tag-outline ng-binding ng-scope"
+                            ng-repeat="tag in $ctrl.article.tagList"
+                          >
+                            {tag}
+                          </li>
+                        ))}
+                      </ul>
                     </a>
-                    <span className="date">January 20th</span>
                   </div>
-                  <button className="btn btn-outline-primary btn-sm pull-xs-right">
-                    <i className="ion-heart"></i> 29
-                  </button>
-                </div>
-                <a href="" className="preview-link">
-                  <h1>How to build webapps that scale</h1>
-                  <p>This is the description for the post.</p>
-                  <span>Read more...</span>
-                </a>
-              </div>
-
-              <div className="article-preview">
-                <div className="article-meta">
-                  <a href="profile.html">
-                    <img src="http://i.imgur.com/N4VcUeJ.jpg" />
-                  </a>
-                  <div className="info">
-                    <a href="" className="author">
-                      Albert Pai
-                    </a>
-                    <span className="date">January 20th</span>
-                  </div>
-                  <button className="btn btn-outline-primary btn-sm pull-xs-right">
-                    <i className="ion-heart"></i> 32
-                  </button>
-                </div>
-                <a href="" className="preview-link">
-                  <h1>The song you won't ever stop singing. No matter how hard you try.</h1>
-                  <p>This is the description for the post.</p>
-                  <span>Read more...</span>
-                </a>
-              </div>
+                ))
+              )}
             </div>
 
             <div className="col-md-3">
