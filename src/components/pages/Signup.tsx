@@ -1,64 +1,67 @@
 import { useState, useRef, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useRecoilState } from 'recoil';
+import { currentUserState } from '../../recoil/atom/currentUserData';
+import { IJoinUserData, IGlobalUserData } from '../../types/userApi.type';
+import { AxiosError } from 'axios';
+import { IError } from '../../types/error.type';
 import Layout from '../layout/Layout';
 import userApi from '../../api/userApi';
-import { IJoinUserData } from '../../types/userApi.type';
+import ErrorPrint from '../ErrorPrint';
+
+interface ISignupError extends IError {
+  signupStatus: boolean;
+}
 
 const Signup = () => {
-  const [signupData, setSignupData] = useState<IJoinUserData>();
+  let signupData: IJoinUserData = {
+    email: '',
+    password: '',
+    username: '',
+  };
+  const [signupResponseData, setSignupResponseData] =
+    useRecoilState<IGlobalUserData>(currentUserState);
+  const [signupStatusData, setSignupStatusData] = useState<ISignupError>();
 
   const emailRef = useRef<HTMLInputElement>(null);
-  const nicknameRef = useRef<HTMLInputElement>(null);
+  const usernameRef = useRef<HTMLInputElement>(null);
   const passwordRef = useRef<HTMLInputElement>(null);
 
-  const onChangeSignupData = (formEvent: React.FormEvent<HTMLInputElement>) => {
-    switch (formEvent.currentTarget.value) {
-      case 'email':
-        break;
-      case 'nickname':
-        break;
-      case 'password':
-        break;
-    }
-  };
+  const navigate = useNavigate();
 
   const onClickSignupData = (buttonEvent: React.MouseEvent<HTMLButtonElement>) => {
     buttonEvent.preventDefault();
-    if (emailRef.current !== null && nicknameRef.current !== null && passwordRef.current !== null) {
-      if (
-        emailRef.current.value === '' ||
-        nicknameRef.current.value === '' ||
-        passwordRef.current.value === ''
-      ) {
-        alert('!');
-      }
-      setSignupData({
+    if (emailRef.current !== null && usernameRef.current !== null && passwordRef.current !== null) {
+      signupData = {
         email: emailRef.current.value,
-        username: nicknameRef.current.value,
+        username: usernameRef.current.value,
         password: passwordRef.current.value,
-      });
+      };
+      join(signupData);
+    }
+  };
+
+  const join = async (signupData: IJoinUserData) => {
+    try {
+      const response = await userApi.join({ user: signupData });
+      setSignupResponseData(response.data);
+    } catch (error) {
+      const signupError = error as AxiosError;
+      if (signupError.response !== undefined && signupError.response.data !== null) {
+        const response = signupError.response.data as IError;
+        setSignupStatusData({
+          signupStatus: false,
+          errors: response.errors,
+        });
+      }
     }
   };
 
   useEffect(() => {
-    setSignupData({
-      email: '',
-      username: '',
-      password: '',
-    });
-
-    const test = {
-      username: 'indianapoylylyl',
-      email: 'hyeonlimgo5@gmail.com',
-      password: 'tiehdn1300',
-    };
-
-    const test2 = userApi.join({ user: test });
-    console.log(test2);
-  }, []);
-
-  useEffect(() => {
-    console.log(signupData?.email);
-  }, [signupData]);
+    if (signupResponseData.token !== '') {
+      navigate('/');
+    }
+  }, [signupResponseData]);
 
   return (
     <>
@@ -69,17 +72,23 @@ const Signup = () => {
               <div className="col-md-6 offset-md-3 col-xs-12">
                 <h1 className="text-xs-center">Sign Up</h1>
                 <p className="text-xs-center">
-                  <a href="">Have an account?</a>
+                  <a href="#/login">Have an account?</a>
                 </p>
+
+                {signupStatusData && !signupStatusData.signupStatus && (
+                  <ul className="error-messages">
+                    <ErrorPrint errors={signupStatusData.errors} />
+                  </ul>
+                )}
 
                 <form>
                   <fieldset className="form-group">
                     <fieldset className="form-group">
                       <input
                         className="form-control form-control-lg"
-                        type="password"
-                        placeholder="Password"
-                        ref={nicknameRef}
+                        type="text"
+                        placeholder="Username"
+                        ref={usernameRef}
                       />
                     </fieldset>
                     <input
