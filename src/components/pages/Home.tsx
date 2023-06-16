@@ -2,8 +2,12 @@ import Layout from '../layout/Layout';
 import tagApi from '../../api/tagApi';
 import { useQuery } from '@tanstack/react-query';
 import { feedApi } from '../../api/articlesApi';
+import { useRecoilState } from 'recoil';
+import { currentUserState } from '../../recoil/atom/currentUserData';
 
 const Home = () => {
+  const [user] = useRecoilState(currentUserState);
+
   const { isLoading: tagIsLoading, data: tagData } = useQuery({
     queryKey: ['tags'],
     queryFn: async () => {
@@ -49,11 +53,13 @@ const Home = () => {
             <div className="col-md-9">
               <div className="feed-toggle">
                 <ul className="nav nav-pills outline-active">
-                  <li className="nav-item">
-                    <a className="nav-link disabled" href="">
-                      Your Feed
-                    </a>
-                  </li>
+                  {user.token && (
+                    <li className="nav-item">
+                      <a className="nav-link disabled" href="">
+                        Your Feed
+                      </a>
+                    </li>
+                  )}
                   <li className="nav-item">
                     <a className="nav-link active" href="">
                       Global Feed
