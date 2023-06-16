@@ -49,7 +49,7 @@ const Header = () => {
                 </li>
                 <li className="nav-item" onClick={logout}>
                   <a className="nav-link" href="">
-                    <i className="ion-gear-a"></i>&nbsp;Log out
+                    Log out
                   </a>
                 </li>
               </>
