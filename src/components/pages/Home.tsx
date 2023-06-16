@@ -1,18 +1,22 @@
 import Layout from '../layout/Layout';
 import tagApi from '../../api/tagApi';
+import { useQuery } from '@tanstack/react-query';
 
 const Home = () => {
-  let tags: string[] = [];
-
-  const getTag = async () => {
-    try {
-      const response = await tagApi.get();
-      tags = response.data.tags;
-    } catch (error) {
-      console.log(error);
-    }
-  };
-  getTag();
+  const { isLoading: tagIsLoading, data: tagData } = useQuery({
+    queryKey: ['tags'],
+    queryFn: async () => {
+      try {
+        const response = await tagApi.get();
+        return response.data.tags;
+      } catch (error) {
+        console.log(error);
+      }
+    },
+    options: {
+      staletime: 300000,
+    },
+  });
 
   return (
     <Layout>
@@ -91,15 +95,19 @@ const Home = () => {
               <div className="sidebar">
                 <p>Popular Tags</p>
 
-                <div className="tag-list">
-                  {tags.map((tagData) => {
-                    return (
-                      <a href="" className="tag-pill tag-default">
-                        {tagData}
-                      </a>
-                    );
-                  })}
-                </div>
+                {tagIsLoading ? (
+                  <div> loading ... </div>
+                ) : (
+                  <div className="tag-list">
+                    {tagData!.map((tagData, index) => {
+                      return (
+                        <a key={index} href="" className="tag-pill tag-default">
+                          {tagData}
+                        </a>
+                      );
+                    })}
+                  </div>
+                )}
               </div>
             </div>
           </div>
