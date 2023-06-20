@@ -19,9 +19,7 @@ const Home = () => {
         console.log(error);
       }
     },
-    options: {
-      staletime: 300000,
-    },
+    staleTime: Infinity,
   });
 
   const {
@@ -38,9 +36,7 @@ const Home = () => {
         console.log(error);
       }
     },
-    option: {
-      staletime: 300000,
-    },
+    staleTime: 60000,
   });
 
   const pageButtonList = () => {
