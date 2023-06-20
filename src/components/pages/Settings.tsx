@@ -1,6 +1,10 @@
 import Layout from '../layout/Layout';
+import { useRecoilState } from 'recoil';
+import { currentUserState } from '../../recoil/atom/currentUserData';
 
 const Settings = () => {
+  const [user] = useRecoilState(currentUserState);
+
   return (
     <Layout>
       <div className="settings-page">
@@ -16,6 +20,7 @@ const Settings = () => {
                       className="form-control"
                       type="text"
                       placeholder="URL of profile picture"
+                      defaultValue={user.user.image}
                     />
                   </fieldset>
                   <fieldset className="form-group">
@@ -23,6 +28,7 @@ const Settings = () => {
                       className="form-control form-control-lg"
                       type="text"
                       placeholder="Your Name"
+                      defaultValue={user.user.username}
                     />
                   </fieldset>
                   <fieldset className="form-group">
@@ -37,6 +43,7 @@ const Settings = () => {
                       className="form-control form-control-lg"
                       type="text"
                       placeholder="Email"
+                      defaultValue={user.user.email}
                     />
                   </fieldset>
                   <fieldset className="form-group">
@@ -44,6 +51,7 @@ const Settings = () => {
                       className="form-control form-control-lg"
                       type="password"
                       placeholder="Password"
+                      autoComplete="new-password"
                     />
                   </fieldset>
                   <button className="btn btn-lg btn-primary pull-xs-right">Update Settings</button>
