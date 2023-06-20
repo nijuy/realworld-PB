@@ -7,6 +7,7 @@ import { currentUserState } from '../../recoil/atom/currentUserData';
 
 const Home = () => {
   const [user] = useRecoilState(currentUserState);
+  let offset = 0;
 
   const { isLoading: tagIsLoading, data: tagData } = useQuery({
     queryKey: ['tags'],
@@ -23,11 +24,15 @@ const Home = () => {
     },
   });
 
-  const { isLoading: feedIsLoading, data: feedData } = useQuery({
+  const {
+    isLoading: feedIsLoading,
+    refetch,
+    data: feedData,
+  } = useQuery({
     queryKey: ['feed'],
     queryFn: async () => {
       try {
-        const response = await feedApi.getGlobalFeed();
+        const response = await feedApi.getGlobalFeed(offset);
         return response.data;
       } catch (error) {
         console.log(error);
@@ -37,6 +42,36 @@ const Home = () => {
       staletime: 300000,
     },
   });
+
+  const pageButtonList = () => {
+    const buttonCount = feedData.articlesCount / 10 + 1;
+    const buttonList: React.ReactNode[] = [];
+
+    for (let i = 1; i <= buttonCount; i++) {
+      buttonList.push(
+        <li
+          key={i}
+          className="page-item ng-scope"
+          ng-class="{active: pageNumber === $ctrl.currentPage }"
+          ng-repeat="pageNumber in $ctrl.pageRange($ctrl.totalPages)"
+          ng-click="$ctrl.changePage(pageNumber)"
+          onClick={onClickPageButton}
+        >
+          <a className="page-link ng-binding" href="">
+            {i}
+          </a>
+        </li>,
+      );
+    }
+
+    return buttonList;
+  };
+
+  const onClickPageButton = (e: React.MouseEvent<HTMLAnchorElement>) => {
+    e.preventDefault();
+    offset = e.target.innerText * 10 - 10;
+    refetch();
+  };
 
   return (
     <Layout>
@@ -127,6 +162,12 @@ const Home = () => {
                 )}
               </div>
             </div>
+
+            {!feedIsLoading && (
+              <nav>
+                <ul className="pagination">{pageButtonList()}</ul>
+              </nav>
+            )}
           </div>
         </div>
       </div>
