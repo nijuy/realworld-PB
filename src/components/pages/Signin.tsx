@@ -55,7 +55,7 @@ const Signin = () => {
   };
 
   useEffect(() => {
-    if (signinResponseData.token !== '') {
+    if (signinResponseData.user.token !== '') {
       navigate('/');
     }
   }, [signinResponseData]);

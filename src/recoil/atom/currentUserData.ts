@@ -7,11 +7,13 @@ const { persistAtom } = recoilPersist();
 export const currentUserState = atom<IGlobalUserData>({
   key: 'currentUserState',
   default: {
-    username: '',
-    email: '',
-    token: '',
-    bio: '',
-    image: '',
+    user: {
+      username: '',
+      email: '',
+      token: '',
+      bio: '',
+      image: '',
+    },
   },
   effects_UNSTABLE: [persistAtom],
 });
