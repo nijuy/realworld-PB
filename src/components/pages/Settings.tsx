@@ -1,9 +1,26 @@
 import Layout from '../layout/Layout';
 import { useRecoilState } from 'recoil';
 import { currentUserState } from '../../recoil/atom/currentUserData';
+import { useNavigate } from 'react-router-dom';
 
 const Settings = () => {
-  const [user] = useRecoilState(currentUserState);
+  const [user, setUser] = useRecoilState(currentUserState);
+
+  const navigate = useNavigate();
+
+  const logout = () => {
+    setUser({
+      user: {
+        username: '',
+        email: '',
+        token: '',
+        bio: '',
+        image: '',
+      },
+    });
+
+    navigate('/');
+  };
 
   return (
     <Layout>
@@ -58,7 +75,9 @@ const Settings = () => {
                 </fieldset>
               </form>
               <hr />
-              <button className="btn btn-outline-danger">Or click here to logout.</button>
+              <button className="btn btn-outline-danger" onClick={logout}>
+                Or click here to logout.
+              </button>
             </div>
           </div>
         </div>
