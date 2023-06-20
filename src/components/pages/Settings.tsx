@@ -2,6 +2,7 @@ import Layout from '../layout/Layout';
 import { useRecoilState } from 'recoil';
 import { currentUserState } from '../../recoil/atom/currentUserData';
 import { useNavigate } from 'react-router-dom';
+import { useEffect } from 'react';
 
 const Settings = () => {
   const [user, setUser] = useRecoilState(currentUserState);
@@ -21,6 +22,12 @@ const Settings = () => {
 
     navigate('/');
   };
+
+  useEffect(() => {
+    if (user.user.token === '') {
+      navigate('/');
+    }
+  }, []);
 
   return (
     <Layout>
