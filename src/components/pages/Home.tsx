@@ -53,7 +53,7 @@ const Home = () => {
             <div className="col-md-9">
               <div className="feed-toggle">
                 <ul className="nav nav-pills outline-active">
-                  {user.token && (
+                  {user.user.token && (
                     <li className="nav-item">
                       <a className="nav-link disabled" href="">
                         Your Feed
