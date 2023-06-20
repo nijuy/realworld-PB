@@ -28,7 +28,7 @@ const Home = () => {
     queryFn: async () => {
       try {
         const response = await feedApi.getGlobalFeed();
-        return response.data.articles;
+        return response.data;
       } catch (error) {
         console.log(error);
       }
@@ -71,7 +71,7 @@ const Home = () => {
               {feedIsLoading ? (
                 <div> loading ... </div>
               ) : (
-                feedData?.map((article, index) => (
+                feedData?.articles.map((article, index) => (
                   <div key={index} className="article-preview">
                     <div className="article-meta">
                       <a href="profile.html">
