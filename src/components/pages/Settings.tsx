@@ -60,6 +60,7 @@ const Settings = () => {
                       className="form-control form-control-lg"
                       rows={8}
                       placeholder="Short bio about you"
+                      defaultValue={user.user.bio}
                     ></textarea>
                   </fieldset>
                   <fieldset className="form-group">
