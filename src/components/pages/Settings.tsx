@@ -35,8 +35,9 @@ const Settings = () => {
     navigate('/');
   };
 
-  const onSubmitUserData = () => {
+  const onSubmitUserData = (buttonEvent: React.MouseEvent<HTMLButtonElement>) => {
     if (emailRef.current?.checkValidity()) {
+      buttonEvent.preventDefault();
       userData = {
         username: usernameRef.current!.value,
         email: emailRef.current.value,
@@ -52,8 +53,9 @@ const Settings = () => {
     try {
       const response = await userApi.modify({ user: userData });
       setUser(response.data);
-      setToken(user.user.token);
-      updateHeader(user.user.token);
+      setToken(response.data.user.token);
+      updateHeader(response.data.user.token);
+      navigate('/'); // profile page로 수정 필요
     } catch (error) {
       console.log(error);
     }
