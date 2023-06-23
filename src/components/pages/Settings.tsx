@@ -5,6 +5,8 @@ import { useNavigate } from 'react-router-dom';
 import { useEffect, useRef } from 'react';
 import userApi from '../../api/userApi';
 import { IEditUserData } from '../../types/userApi.type';
+import { setToken } from '../../services/TokenService';
+import { updateHeader } from '../../api/api';
 
 const Settings = () => {
   const [user, setUser] = useRecoilState(currentUserState);
@@ -50,7 +52,8 @@ const Settings = () => {
     try {
       const response = await userApi.modify({ user: userData });
       setUser(response.data);
-      //토큰 갱신 코드 추가 예정
+      setToken(user.user.token);
+      updateHeader(user.user.token);
     } catch (error) {
       console.log(error);
     }
