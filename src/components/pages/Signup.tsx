@@ -29,15 +29,20 @@ const Signup = () => {
 
   const navigate = useNavigate();
 
-  const onClickSignupData = (buttonEvent: React.MouseEvent<HTMLButtonElement>) => {
-    buttonEvent.preventDefault();
-    if (emailRef.current !== null && usernameRef.current !== null && passwordRef.current !== null) {
-      signupData = {
-        email: emailRef.current.value,
-        username: usernameRef.current.value,
-        password: passwordRef.current.value,
-      };
-      join(signupData);
+  const onClickSignupData = () => {
+    if (emailRef.current?.checkValidity()) {
+      if (
+        emailRef.current !== null &&
+        usernameRef.current !== null &&
+        passwordRef.current !== null
+      ) {
+        signupData = {
+          email: emailRef.current.value,
+          username: usernameRef.current.value,
+          password: passwordRef.current.value,
+        };
+        join(signupData);
+      }
     }
   };
 
@@ -93,7 +98,7 @@ const Signup = () => {
                     </fieldset>
                     <input
                       className="form-control form-control-lg"
-                      type="text"
+                      type="email"
                       placeholder="Email"
                       ref={emailRef}
                     />
