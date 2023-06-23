@@ -2,12 +2,18 @@ import Layout from '../layout/Layout';
 import { useRecoilState } from 'recoil';
 import { currentUserState } from '../../recoil/atom/currentUserData';
 import { useNavigate } from 'react-router-dom';
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 
 const Settings = () => {
   const [user, setUser] = useRecoilState(currentUserState);
 
   const navigate = useNavigate();
+
+  const emailRef = useRef<HTMLInputElement>(null);
+  const passwordRef = useRef<HTMLInputElement>(null);
+  const imageRef = useRef<HTMLInputElement>(null);
+  const bioRef = useRef<HTMLTextAreaElement>(null);
+  const usernameRef = useRef<HTMLInputElement>(null);
 
   const logout = () => {
     setUser({
@@ -45,6 +51,7 @@ const Settings = () => {
                       type="text"
                       placeholder="URL of profile picture"
                       defaultValue={user.user.image}
+                      ref={imageRef}
                     />
                   </fieldset>
                   <fieldset className="form-group">
@@ -53,6 +60,7 @@ const Settings = () => {
                       type="text"
                       placeholder="Your Name"
                       defaultValue={user.user.username}
+                      ref={usernameRef}
                     />
                   </fieldset>
                   <fieldset className="form-group">
@@ -61,6 +69,7 @@ const Settings = () => {
                       rows={8}
                       placeholder="Short bio about you"
                       defaultValue={user.user.bio}
+                      ref={bioRef}
                     ></textarea>
                   </fieldset>
                   <fieldset className="form-group">
@@ -69,6 +78,7 @@ const Settings = () => {
                       type="email"
                       placeholder="Email"
                       defaultValue={user.user.email}
+                      ref={emailRef}
                     />
                   </fieldset>
                   <fieldset className="form-group">
@@ -77,6 +87,7 @@ const Settings = () => {
                       type="password"
                       placeholder="Password"
                       autoComplete="new-password"
+                      ref={passwordRef}
                     />
                   </fieldset>
                   <button className="btn btn-lg btn-primary pull-xs-right">Update Settings</button>
