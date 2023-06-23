@@ -8,6 +8,8 @@ import ErrorPrint from '../ErrorPrint';
 import Layout from '../layout/Layout';
 import { useRecoilState } from 'recoil';
 import { currentUserState } from '../../recoil/atom/currentUserData';
+import { setToken } from '../../services/TokenService';
+import { updateHeader } from '../../api/api';
 
 interface ISigninError extends IError {
   signinStatus: boolean;
@@ -28,11 +30,11 @@ const Signin = () => {
   const passwordRef = useRef<HTMLInputElement>(null);
 
   const onClickSigninData = (buttonEvent: React.MouseEvent<HTMLButtonElement>) => {
-    buttonEvent.preventDefault();
-    if (emailRef.current !== null && passwordRef.current !== null) {
+    if (emailRef.current?.checkValidity()) {
+      buttonEvent.preventDefault();
       signinData = {
         email: emailRef.current.value,
-        password: passwordRef.current.value,
+        password: passwordRef.current!.value,
       };
       login(signinData);
     }
@@ -42,6 +44,8 @@ const Signin = () => {
     try {
       const response = await userApi.login({ user: signinData });
       setSigninResponseData(response.data);
+      setToken(response.data.user.token);
+      updateHeader(response.data.user.token);
     } catch (error) {
       const signinError = error as AxiosError;
       if (signinError.response !== undefined && signinError.response.data !== null) {
@@ -82,7 +86,7 @@ const Signin = () => {
                   <fieldset className="form-group">
                     <input
                       className="form-control form-control-lg"
-                      type="text"
+                      type="email"
                       placeholder="Email"
                       ref={emailRef}
                     />
