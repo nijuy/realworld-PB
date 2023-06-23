@@ -25,8 +25,8 @@ const userApi = {
     return response;
   },
 
-  join: (userData: { user: IJoinUserData }) => {
-    const response = Axios.post<IJoinUserData, IGlobalUserData>('/users', userData);
+  join: (userData: { user: IJoinUserData }): Promise<AxiosResponse<IGlobalUserData>> => {
+    const response = Axios.post('/users', userData);
     return response;
   },
 
