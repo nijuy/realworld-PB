@@ -27,12 +27,11 @@ const Signin = () => {
   const emailRef = useRef<HTMLInputElement>(null);
   const passwordRef = useRef<HTMLInputElement>(null);
 
-  const onClickSigninData = (buttonEvent: React.MouseEvent<HTMLButtonElement>) => {
-    buttonEvent.preventDefault();
-    if (emailRef.current !== null && passwordRef.current !== null) {
+  const onClickSigninData = () => {
+    if (emailRef.current?.checkValidity()) {
       signinData = {
         email: emailRef.current.value,
-        password: passwordRef.current.value,
+        password: passwordRef.current!.value,
       };
       login(signinData);
     }
@@ -55,7 +54,7 @@ const Signin = () => {
   };
 
   useEffect(() => {
-    if (signinResponseData.token !== '') {
+    if (signinResponseData.user.token !== '') {
       navigate('/');
     }
   }, [signinResponseData]);
@@ -82,7 +81,7 @@ const Signin = () => {
                   <fieldset className="form-group">
                     <input
                       className="form-control form-control-lg"
-                      type="text"
+                      type="email"
                       placeholder="Email"
                       ref={emailRef}
                     />

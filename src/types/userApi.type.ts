@@ -34,9 +34,5 @@ export interface IEditUserData {
  * @ACTION globalData
  */
 export interface IGlobalUserData {
-  username: string;
-  email: string;
-  token: string;
-  bio: string;
-  image: string;
+  user: { username: string; email: string; token: string; bio: string; image: string };
 }
