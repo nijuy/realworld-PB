@@ -29,13 +29,11 @@ const Signin = () => {
 
   const onClickSigninData = () => {
     if (emailRef.current?.checkValidity()) {
-      if (emailRef.current !== null && passwordRef.current !== null) {
-        signinData = {
-          email: emailRef.current.value,
-          password: passwordRef.current.value,
-        };
-        login(signinData);
-      }
+      signinData = {
+        email: emailRef.current.value,
+        password: passwordRef.current!.value,
+      };
+      login(signinData);
     }
   };
 
