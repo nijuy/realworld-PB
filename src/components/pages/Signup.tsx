@@ -8,6 +8,8 @@ import { IError } from '../../types/error.type';
 import Layout from '../layout/Layout';
 import userApi from '../../api/userApi';
 import ErrorPrint from '../ErrorPrint';
+import { setToken } from '../../services/TokenService';
+import { updateHeader } from '../../api/api';
 
 interface ISignupError extends IError {
   signupStatus: boolean;
@@ -44,6 +46,8 @@ const Signup = () => {
     try {
       const response = await userApi.join({ user: signupData });
       setSignupResponseData(response.data);
+      setToken(response.data.user.token);
+      updateHeader(response.data.user.token);
     } catch (error) {
       const signupError = error as AxiosError;
       if (signupError.response !== undefined && signupError.response.data !== null) {
