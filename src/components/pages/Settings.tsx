@@ -66,7 +66,7 @@ const Settings = () => {
                   <fieldset className="form-group">
                     <input
                       className="form-control form-control-lg"
-                      type="text"
+                      type="email"
                       placeholder="Email"
                       defaultValue={user.user.email}
                     />
