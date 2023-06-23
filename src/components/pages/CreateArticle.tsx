@@ -1,6 +1,17 @@
+import { useEffect } from 'react';
 import Layout from '../layout/Layout';
+import { getToken } from '../../services/TokenService';
+import { useNavigate } from 'react-router-dom';
 
 const CreateArticle = () => {
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (getToken() === null) {
+      navigate('/');
+    }
+  }, []);
+
   return (
     <Layout>
       <div className="editor-page">
