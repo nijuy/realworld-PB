@@ -2,6 +2,8 @@ import { useEffect, useRef, useState } from 'react';
 import Layout from '../layout/Layout';
 import { getToken } from '../../services/TokenService';
 import { useNavigate } from 'react-router-dom';
+import { INewArticleRequest } from '../../types/articleApi.type';
+import { articleApi } from '../../api/articlesApi';
 
 const CreateArticle = () => {
   const navigate = useNavigate();
@@ -12,6 +14,15 @@ const CreateArticle = () => {
   const tagRef = useRef<HTMLInputElement>(null);
 
   const [tagList, setTagList] = useState<string[]>([]);
+
+  let articleData: INewArticleRequest = {
+    article: {
+      title: '',
+      description: '',
+      body: '',
+      tagList: [],
+    },
+  };
 
   const addTag = () => {
     const newTag = tagRef.current?.value || '';
@@ -24,6 +35,27 @@ const CreateArticle = () => {
 
   const removeTag = (removedTag: string) => {
     setTagList((prevState) => prevState.filter((tag) => tag !== removedTag));
+  };
+
+  const onSubmitArticle = () => {
+    articleData = {
+      article: {
+        title: titleRef.current!.value,
+        description: descriptionRef.current!.value,
+        body: bodyRef.current!.value,
+        tagList: tagList,
+      },
+    };
+    createArticle(articleData);
+  };
+
+  const createArticle = async (articleData: INewArticleRequest) => {
+    try {
+      await articleApi.create(articleData);
+      navigate('/');
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   useEffect(() => {
@@ -101,7 +133,11 @@ const CreateArticle = () => {
                         ))}
                     </div>
                   </fieldset>
-                  <button className="btn btn-lg pull-xs-right btn-primary" type="button">
+                  <button
+                    className="btn btn-lg pull-xs-right btn-primary"
+                    type="button"
+                    onClick={onSubmitArticle}
+                  >
                     Publish Article
                   </button>
                 </fieldset>
