@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import Layout from '../layout/Layout';
 import { getToken } from '../../services/TokenService';
 import { useNavigate } from 'react-router-dom';
@@ -10,6 +10,21 @@ const CreateArticle = () => {
   const descriptionRef = useRef<HTMLInputElement>(null);
   const bodyRef = useRef<HTMLTextAreaElement>(null);
   const tagRef = useRef<HTMLInputElement>(null);
+
+  const [tagList, setTagList] = useState<string[]>([]);
+
+  const addTag = () => {
+    const newTag = tagRef.current?.value || '';
+
+    if (newTag !== '' && !tagList?.includes(newTag)) {
+      setTagList((prevState) => [...prevState!, newTag]);
+      tagRef.current!.value = '';
+    }
+  };
+
+  const removeTag = (removedTag: string) => {
+    setTagList((prevState) => prevState.filter((tag) => tag !== removedTag));
+  };
 
   useEffect(() => {
     if (getToken() === null) {
@@ -50,13 +65,41 @@ const CreateArticle = () => {
                     ></textarea>
                   </fieldset>
                   <fieldset className="form-group">
-                    <input
-                      type="text"
-                      className="form-control"
-                      placeholder="Enter tags"
-                      ref={tagRef}
-                    />
-                    <div className="tag-list"></div>
+                    <div style={{ display: 'flex' }}>
+                      <input
+                        type="text"
+                        className="form-control"
+                        placeholder="Enter tags"
+                        ref={tagRef}
+                      />
+                      <button
+                        style={{
+                          marginLeft: '20px',
+                        }}
+                        className="btn btn-md pull-xs-right btn-primary"
+                        type="button"
+                        onClick={addTag}
+                      >
+                        Add Tag
+                      </button>
+                    </div>
+                    <div className="tag-list">
+                      {tagList &&
+                        tagList.map((tagData, index) => (
+                          <span
+                            key={index}
+                            ng-repeat="tag in $ctrl.article.tagList"
+                            className="tag-default tag-pill ng-binding ng-scope"
+                          >
+                            <i
+                              className="ion-close-round"
+                              ng-click="$ctrl.removeTag(tag)"
+                              onClick={() => removeTag(tagData)}
+                            ></i>
+                            {tagData}
+                          </span>
+                        ))}
+                    </div>
                   </fieldset>
                   <button className="btn btn-lg pull-xs-right btn-primary" type="button">
                     Publish Article
