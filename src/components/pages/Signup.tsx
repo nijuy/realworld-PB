@@ -31,8 +31,9 @@ const Signup = () => {
 
   const navigate = useNavigate();
 
-  const onClickSignupData = () => {
+  const onClickSignupData = (buttonEvent: React.MouseEvent<HTMLButtonElement>) => {
     if (emailRef.current?.checkValidity()) {
+      buttonEvent.preventDefault();
       signupData = {
         email: emailRef.current.value,
         username: usernameRef.current!.value,
