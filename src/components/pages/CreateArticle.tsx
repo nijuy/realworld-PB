@@ -4,6 +4,13 @@ import { getToken } from '../../services/TokenService';
 import { useNavigate } from 'react-router-dom';
 import { INewArticleRequest } from '../../types/articleApi.type';
 import { articleApi } from '../../api/articlesApi';
+import { AxiosError } from 'axios';
+import { IError } from '../../types/error.type';
+import ErrorPrint from '../ErrorPrint';
+
+interface IPostError extends IError {
+  postStatus: boolean;
+}
 
 const CreateArticle = () => {
   const navigate = useNavigate();
@@ -14,6 +21,7 @@ const CreateArticle = () => {
   const tagRef = useRef<HTMLInputElement>(null);
 
   const [tagList, setTagList] = useState<string[]>([]);
+  const [postStatusData, setPostStatusData] = useState<IPostError>();
 
   let articleData: INewArticleRequest = {
     article: {
@@ -54,7 +62,14 @@ const CreateArticle = () => {
       await articleApi.create(articleData);
       navigate('/');
     } catch (error) {
-      console.log(error);
+      const postError = error as AxiosError;
+      if (postError.response !== undefined && postError.response.data !== null) {
+        const response = postError.response.data as IError;
+        setPostStatusData({
+          postStatus: false,
+          errors: response.errors,
+        });
+      }
     }
   };
 
@@ -70,6 +85,11 @@ const CreateArticle = () => {
         <div className="container page">
           <div className="row">
             <div className="col-md-10 offset-md-1 col-xs-12">
+              {postStatusData && !postStatusData.postStatus && (
+                <ul className="error-messages" ng-show="$ctrl.errors">
+                  <ErrorPrint errors={postStatusData.errors} />
+                </ul>
+              )}
               <form>
                 <fieldset>
                   <fieldset className="form-group">
