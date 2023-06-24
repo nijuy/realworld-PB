@@ -8,7 +8,7 @@ const CreateArticle = () => {
 
   const titleRef = useRef<HTMLInputElement>(null);
   const descriptionRef = useRef<HTMLInputElement>(null);
-  const contentRef = useRef<HTMLTextAreaElement>(null);
+  const bodyRef = useRef<HTMLTextAreaElement>(null);
   const tagRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
@@ -46,7 +46,7 @@ const CreateArticle = () => {
                       className="form-control"
                       rows={8}
                       placeholder="Write your article (in markdown)"
-                      ref={contentRef}
+                      ref={bodyRef}
                     ></textarea>
                   </fieldset>
                   <fieldset className="form-group">
