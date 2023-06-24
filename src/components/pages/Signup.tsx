@@ -62,7 +62,7 @@ const Signup = () => {
   };
 
   useEffect(() => {
-    if (signupResponseData.token !== '') {
+    if (signupResponseData.user.token !== '') {
       navigate('/');
     }
   }, [signupResponseData]);
