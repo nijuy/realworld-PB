@@ -2,8 +2,12 @@ import Layout from '../layout/Layout';
 import { useParams } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { articleApi } from '../../api/articlesApi';
+import { currentUserState } from '../../recoil/atom/currentUserData';
+import { useRecoilValue } from 'recoil';
 
 const Article = () => {
+  const user = useRecoilValue(currentUserState);
+
   const slug = useParams().URLSlug;
 
   const dateOptions = { year: 'numeric', month: 'long', day: 'numeric' };
@@ -41,16 +45,40 @@ const Article = () => {
                   {new Date(articleData?.createdAt).toLocaleDateString('en-US', dateOptions)}
                 </span>
               </div>
-              <button className="btn btn-sm btn-outline-secondary">
-                <i className="ion-plus-round"></i>
-                &nbsp; Follow {articleData?.author.username} <span className="counter"></span>
-              </button>
-              &nbsp;&nbsp;
-              <button className="btn btn-sm btn-outline-primary">
-                <i className="ion-heart"></i>
-                &nbsp; Favorite Article
-                <span className="counter">({articleData?.favoritesCount})</span>
-              </button>
+              {user.user.username !== articleData?.author.username ? (
+                <>
+                  <button className="btn btn-sm btn-outline-secondary">
+                    <i className="ion-plus-round"></i>
+                    &nbsp; Follow {articleData?.author.username} <span className="counter"></span>
+                  </button>
+                  &nbsp;&nbsp;
+                  <button className="btn btn-sm btn-outline-primary">
+                    <i className="ion-heart"></i>
+                    &nbsp; Favorite Article
+                    <span className="counter">({articleData?.favoritesCount})</span>
+                  </button>
+                </>
+              ) : (
+                <>
+                  <span ng-show="$ctrl.canModify" className="ng-scope">
+                    <a
+                      className="btn btn-outline-secondary btn-sm"
+                      ui-sref="app.editor({ slug: $ctrl.article.slug })"
+                      href="#/editor/-187402"
+                    >
+                      <i className="ion-edit"></i> Edit Article
+                    </a>
+                    &nbsp;&nbsp;
+                    <button
+                      className="btn btn-outline-danger btn-sm"
+                      ng-class="{disabled: $ctrl.isDeleting}"
+                      ng-click="$ctrl.deleteArticle()"
+                    >
+                      <i className="ion-trash-a"></i> Delete Article
+                    </button>
+                  </span>
+                </>
+              )}
             </div>
           </div>
         </div>
@@ -84,16 +112,40 @@ const Article = () => {
                   {new Date(articleData?.createdAt).toLocaleDateString('en-US', dateOptions)}
                 </span>
               </div>
-              <button className="btn btn-sm btn-outline-secondary">
-                <i className="ion-plus-round"></i>
-                &nbsp; Follow {articleData?.author.username}
-              </button>
-              &nbsp;
-              <button className="btn btn-sm btn-outline-primary">
-                <i className="ion-heart"></i>
-                &nbsp; Favorite Article
-                <span className="counter">({articleData?.favoritesCount})</span>
-              </button>
+              {user.user.username !== articleData?.author.username ? (
+                <>
+                  <button className="btn btn-sm btn-outline-secondary">
+                    <i className="ion-plus-round"></i>
+                    &nbsp; Follow {articleData?.author.username} <span className="counter"></span>
+                  </button>
+                  &nbsp;&nbsp;
+                  <button className="btn btn-sm btn-outline-primary">
+                    <i className="ion-heart"></i>
+                    &nbsp; Favorite Article
+                    <span className="counter">({articleData?.favoritesCount})</span>
+                  </button>
+                </>
+              ) : (
+                <>
+                  <span ng-show="$ctrl.canModify" className="ng-scope">
+                    <a
+                      className="btn btn-outline-secondary btn-sm"
+                      ui-sref="app.editor({ slug: $ctrl.article.slug })"
+                      href="#/editor/-187402"
+                    >
+                      <i className="ion-edit"></i> Edit Article
+                    </a>
+                    &nbsp;&nbsp;
+                    <button
+                      className="btn btn-outline-danger btn-sm"
+                      ng-class="{disabled: $ctrl.isDeleting}"
+                      ng-click="$ctrl.deleteArticle()"
+                    >
+                      <i className="ion-trash-a"></i> Delete Article
+                    </button>
+                  </span>
+                </>
+              )}
             </div>
           </div>
 
