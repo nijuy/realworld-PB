@@ -6,7 +6,7 @@ import { IJoinUserData, IGlobalUserData } from '../../types/userApi.type';
 import { AxiosError } from 'axios';
 import { IError } from '../../types/error.type';
 import Layout from '../layout/Layout';
-import userApi from '../../api/userApi';
+import { userApi } from '../../api/userApi';
 import ErrorPrint from '../ErrorPrint';
 import { setToken } from '../../services/TokenService';
 import { updateHeader } from '../../api/api';
