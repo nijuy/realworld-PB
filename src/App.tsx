@@ -17,11 +17,11 @@ function App() {
         <HashRouter>
           <Routes>
             <Route path="/" element={<Home />} />
-            <Route path="/article:URLSlug" element={<Article />} />
+            <Route path="/article/:URLSlug" element={<Article />} />
             <Route path="/editor" element={<CreateArticle />} />
-            <Route path="/editor:URLSlug" element={<EditArticle />} />
+            <Route path="/editor/:URLSlug" element={<EditArticle />} />
             <Route path="/settings" element={<Settings />} />
-            <Route path="/profile/:userId" element={<Profile />} />
+            <Route path="/profile/:username" element={<Profile />} />
             <Route path="/login" element={<Signin />} />
             <Route path="/register" element={<Signup />} />
           </Routes>

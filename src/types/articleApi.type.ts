@@ -1,8 +1,21 @@
 /**
+ * @CRUD post
+ * @ACTION createArticle
+ */
+export interface INewArticleRequest {
+  article: {
+    title: string;
+    description: string;
+    body: string;
+    tagList: string[];
+  };
+}
+
+/**
  * @CRUD get
  * @Action getArticleData
  */
-export interface IArticleData {
+export interface ISingleArticleResponse {
   article: {
     slug: string;
     title: string;
@@ -26,7 +39,7 @@ export interface IArticleData {
  * @CRUD get
  * @Action getFeedData
  */
-export interface IFeedData {
-  articles: IArticleData[];
+export interface IMultipleArticlesResponse {
+  articles: ISingleArticleResponse[];
   articlesCount: number;
 }

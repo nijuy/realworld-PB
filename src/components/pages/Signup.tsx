@@ -8,6 +8,8 @@ import { IError } from '../../types/error.type';
 import Layout from '../layout/Layout';
 import userApi from '../../api/userApi';
 import ErrorPrint from '../ErrorPrint';
+import { setToken } from '../../services/TokenService';
+import { updateHeader } from '../../api/api';
 
 interface ISignupError extends IError {
   signupStatus: boolean;
@@ -19,8 +21,7 @@ const Signup = () => {
     password: '',
     username: '',
   };
-  const [signupResponseData, setSignupResponseData] =
-    useRecoilState<IGlobalUserData>(currentUserState);
+  const [user, setUser] = useRecoilState<IGlobalUserData>(currentUserState);
   const [signupStatusData, setSignupStatusData] = useState<ISignupError>();
 
   const emailRef = useRef<HTMLInputElement>(null);
@@ -30,12 +31,12 @@ const Signup = () => {
   const navigate = useNavigate();
 
   const onClickSignupData = (buttonEvent: React.MouseEvent<HTMLButtonElement>) => {
-    buttonEvent.preventDefault();
-    if (emailRef.current !== null && usernameRef.current !== null && passwordRef.current !== null) {
+    if (emailRef.current?.checkValidity()) {
+      buttonEvent.preventDefault();
       signupData = {
         email: emailRef.current.value,
-        username: usernameRef.current.value,
-        password: passwordRef.current.value,
+        username: usernameRef.current!.value,
+        password: passwordRef.current!.value,
       };
       join(signupData);
     }
@@ -44,7 +45,9 @@ const Signup = () => {
   const join = async (signupData: IJoinUserData) => {
     try {
       const response = await userApi.join({ user: signupData });
-      setSignupResponseData(response.data);
+      setUser(response.data);
+      setToken(response.data.user.token);
+      updateHeader(response.data.user.token);
     } catch (error) {
       const signupError = error as AxiosError;
       if (signupError.response !== undefined && signupError.response.data !== null) {
@@ -58,10 +61,10 @@ const Signup = () => {
   };
 
   useEffect(() => {
-    if (signupResponseData.token !== '') {
+    if (user.user.token !== '') {
       navigate('/');
     }
-  }, [signupResponseData]);
+  }, [user]);
 
   return (
     <>
@@ -93,7 +96,7 @@ const Signup = () => {
                     </fieldset>
                     <input
                       className="form-control form-control-lg"
-                      type="text"
+                      type="email"
                       placeholder="Email"
                       ref={emailRef}
                     />
