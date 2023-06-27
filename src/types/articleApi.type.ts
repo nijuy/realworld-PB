@@ -37,6 +37,16 @@ export interface ISingleArticleResponse {
 
 /**
  * @CRUD get
+ *
+ */
+export interface INewCommentRequest {
+  comment: {
+    body: string;
+  };
+}
+
+/**
+ * @CRUD get
  * @Action getFeedData
  */
 export interface IMultipleArticlesResponse {
