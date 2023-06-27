@@ -217,20 +217,33 @@ const Article = () => {
 
           <div className="row">
             <div className="col-xs-12 col-md-8 offset-md-2">
-              <form className="card comment-form" onSubmit={onSubmitCommentData}>
-                <div className="card-block">
-                  <textarea
-                    className="form-control"
-                    placeholder="Write a comment..."
-                    rows={3}
-                    ref={commentRef}
-                  ></textarea>
-                </div>
-                <div className="card-footer">
-                  <img src={user.user.image} className="comment-author-img" />
-                  <button className="btn btn-sm btn-primary">Post Comment</button>
-                </div>
-              </form>
+              {user.user.token ? (
+                <form className="card comment-form" onSubmit={onSubmitCommentData}>
+                  <div className="card-block">
+                    <textarea
+                      className="form-control"
+                      placeholder="Write a comment..."
+                      rows={3}
+                      ref={commentRef}
+                    ></textarea>
+                  </div>
+                  <div className="card-footer">
+                    <img src={user.user.image} className="comment-author-img" />
+                    <button className="btn btn-sm btn-primary">Post Comment</button>
+                  </div>
+                </form>
+              ) : (
+                <p style={{ display: 'inherit' }}>
+                  <a ui-sref="app.login" href="#/login">
+                    Sign in
+                  </a>
+                  &nbsp;or&nbsp;
+                  <a ui-sref="app.register" href="#/register">
+                    Sign up
+                  </a>
+                  &nbsp;to add comments on this article.
+                </p>
+              )}
 
               {commentList &&
                 commentList.map((commentData, index) => (
@@ -249,15 +262,18 @@ const Article = () => {
                       <span className="date-posted">
                         {new Date(commentData?.createdAt).toLocaleDateString('en-US', dateOptions)}
                       </span>
-                      <span className="mod-options" ng-show="$ctrl.canModify">
-                        <i
-                          className="ion-trash-a"
-                          ng-click="$ctrl.deleteCb()"
-                          onClick={() => {
-                            deleteComment(commentData.id);
-                          }}
-                        ></i>
-                      </span>
+                      {!user.user.token ||
+                        (user.user.username === articleData?.author.username && (
+                          <span className="mod-options" ng-show="$ctrl.canModify">
+                            <i
+                              className="ion-trash-a"
+                              ng-click="$ctrl.deleteCb()"
+                              onClick={() => {
+                                deleteComment(commentData.id);
+                              }}
+                            ></i>
+                          </span>
+                        ))}
                     </div>
                   </div>
                 ))}
