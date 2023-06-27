@@ -64,7 +64,7 @@ const Article = () => {
                     <a
                       className="btn btn-outline-secondary btn-sm"
                       ui-sref="app.editor({ slug: $ctrl.article.slug })"
-                      href="#/editor/-187402"
+                      href={`#/editor/${slug}`}
                     >
                       <i className="ion-edit"></i> Edit Article
                     </a>
@@ -131,7 +131,7 @@ const Article = () => {
                     <a
                       className="btn btn-outline-secondary btn-sm"
                       ui-sref="app.editor({ slug: $ctrl.article.slug })"
-                      href="#/editor/-187402"
+                      href={`#/editor/${slug}`}
                     >
                       <i className="ion-edit"></i> Edit Article
                     </a>
