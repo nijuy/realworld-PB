@@ -221,45 +221,29 @@ const Article = () => {
                 </div>
               </form>
 
-              <div className="card">
-                <div className="card-block">
-                  <p className="card-text">
-                    With supporting text below as a natural lead-in to additional content.
-                  </p>
-                </div>
-                <div className="card-footer">
-                  <a href="" className="comment-author">
-                    <img src="http://i.imgur.com/Qr71crq.jpg" className="comment-author-img" />
-                  </a>
-                  &nbsp;
-                  <a href="" className="comment-author">
-                    Jacob Schmidt
-                  </a>
-                  <span className="date-posted">Dec 29th</span>
-                </div>
-              </div>
-
-              <div className="card">
-                <div className="card-block">
-                  <p className="card-text">
-                    With supporting text below as a natural lead-in to additional content.
-                  </p>
-                </div>
-                <div className="card-footer">
-                  <a href="" className="comment-author">
-                    <img src="http://i.imgur.com/Qr71crq.jpg" className="comment-author-img" />
-                  </a>
-                  &nbsp;
-                  <a href="" className="comment-author">
-                    Jacob Schmidt
-                  </a>
-                  <span className="date-posted">Dec 29th</span>
-                  <span className="mod-options">
-                    <i className="ion-edit"></i>
-                    <i className="ion-trash-a"></i>
-                  </span>
-                </div>
-              </div>
+              {commentList &&
+                commentList.map((commentData, index) => (
+                  <div className="card" key={index}>
+                    <div className="card-block">
+                      <p className="card-text">{commentData.body}</p>
+                    </div>
+                    <div className="card-footer">
+                      <a href="" className="comment-author">
+                        <img src={commentData.author.image} className="comment-author-img" />
+                      </a>
+                      &nbsp;&nbsp;
+                      <a href="" className="comment-author">
+                        {commentData.author.username}
+                      </a>
+                      <span className="date-posted">
+                        {new Date(commentData?.createdAt).toLocaleDateString('en-US', dateOptions)}
+                      </span>
+                      <span className="mod-options" ng-show="$ctrl.canModify">
+                        <i className="ion-trash-a" ng-click="$ctrl.deleteCb()"></i>
+                      </span>
+                    </div>
+                  </div>
+                ))}
             </div>
           </div>
         </div>
