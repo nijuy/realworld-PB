@@ -54,6 +54,7 @@ const Article = () => {
       },
     };
     addComment(commentData);
+    commentRef.current!.value = '';
   };
 
   const addComment = async (commentData: INewCommentRequest) => {
