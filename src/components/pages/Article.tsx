@@ -32,7 +32,7 @@ const Article = () => {
     },
   });
 
-  const { data: commentData, refetch } = useQuery({
+  const { data: commentList, refetch } = useQuery({
     queryKey: ['comment'],
     queryFn: async () => {
       try {
