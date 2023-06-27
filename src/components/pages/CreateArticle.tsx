@@ -35,10 +35,18 @@ const CreateArticle = () => {
   const addTag = () => {
     const newTag = tagRef.current?.value || '';
 
-    if (newTag !== '' && !tagList?.includes(newTag)) {
-      setTagList((prevState) => [...prevState!, newTag]);
-      tagRef.current!.value = '';
+    if (newTag === '') {
+      alert('태그를 입력해주세요');
+      return;
     }
+
+    if (tagList.includes(newTag)) {
+      alert('이미 추가된 태그입니다');
+      return;
+    }
+
+    setTagList((prevState) => [...prevState!, newTag]);
+    tagRef.current!.value = '';
   };
 
   const removeTag = (removedTag: string) => {
