@@ -1,6 +1,74 @@
 import Layout from '../layout/Layout';
+import tagApi from '../../api/tagApi';
+import { useQuery } from '@tanstack/react-query';
+import { feedApi } from '../../api/articlesApi';
+import { useRecoilState } from 'recoil';
+import { currentUserState } from '../../recoil/atom/currentUserData';
 
 const Home = () => {
+  const [user] = useRecoilState(currentUserState);
+  let offset = 0;
+
+  const { isLoading: tagIsLoading, data: tagData } = useQuery({
+    queryKey: ['tags'],
+    queryFn: async () => {
+      try {
+        const response = await tagApi.get();
+        return response.data.tags;
+      } catch (error) {
+        console.log(error);
+      }
+    },
+    staleTime: Infinity,
+  });
+
+  const {
+    isLoading: feedIsLoading,
+    refetch,
+    data: feedData,
+  } = useQuery({
+    queryKey: ['feed'],
+    queryFn: async () => {
+      try {
+        const response = await feedApi.getGlobalFeed(offset);
+        return response.data;
+      } catch (error) {
+        console.log(error);
+      }
+    },
+    staleTime: 60000,
+  });
+
+  const pageButtonList = () => {
+    const buttonCount = feedData.articlesCount / 10 + 1;
+    const buttonList: React.ReactNode[] = [];
+
+    for (let i = 1; i <= buttonCount; i++) {
+      buttonList.push(
+        <li
+          key={i}
+          className="page-item ng-scope"
+          ng-class="{active: pageNumber === $ctrl.currentPage }"
+          ng-repeat="pageNumber in $ctrl.pageRange($ctrl.totalPages)"
+          ng-click="$ctrl.changePage(pageNumber)"
+          onClick={onClickPageButton}
+        >
+          <a className="page-link ng-binding" href="">
+            {i}
+          </a>
+        </li>,
+      );
+    }
+
+    return buttonList;
+  };
+
+  const onClickPageButton = (e: React.MouseEvent<HTMLAnchorElement>) => {
+    e.preventDefault();
+    offset = e.target.innerText * 10 - 10;
+    refetch();
+  };
+
   return (
     <Layout>
       <div className="home-page">
@@ -16,11 +84,13 @@ const Home = () => {
             <div className="col-md-9">
               <div className="feed-toggle">
                 <ul className="nav nav-pills outline-active">
-                  <li className="nav-item">
-                    <a className="nav-link disabled" href="">
-                      Your Feed
-                    </a>
-                  </li>
+                  {user.user.token && (
+                    <li className="nav-item">
+                      <a className="nav-link disabled" href="">
+                        Your Feed
+                      </a>
+                    </li>
+                  )}
                   <li className="nav-item">
                     <a className="nav-link active" href="">
                       Global Feed
@@ -29,83 +99,71 @@ const Home = () => {
                 </ul>
               </div>
 
-              <div className="article-preview">
-                <div className="article-meta">
-                  <a href="profile.html">
-                    <img src="http://i.imgur.com/Qr71crq.jpg" />
-                  </a>
-                  <div className="info">
-                    <a href="" className="author">
-                      Eric Simons
+              {feedIsLoading ? (
+                <div> loading ... </div>
+              ) : (
+                feedData?.articles.map((article, index) => (
+                  <div key={index} className="article-preview">
+                    <div className="article-meta">
+                      <a href="profile.html">
+                        <img src={article.author.image} />
+                      </a>
+                      <div className="info">
+                        <a href="" className="author">
+                          {article.author.username}
+                        </a>
+                        <span className="date">January 20th</span>
+                      </div>
+                      <button className="btn btn-outline-primary btn-sm pull-xs-right">
+                        <i className="ion-heart"></i> {article.favoritesCount}
+                      </button>
+                    </div>
+                    <a href="" className="preview-link">
+                      <h1>{article.title}</h1>
+                      <p>{article.description}</p>
+                      <span>Read more...</span>
+                      <ul className="tag-list">
+                        {article.tagList.map((tag, index) => (
+                          <li
+                            key={index}
+                            className="tag-default tag-pill tag-outline ng-binding ng-scope"
+                            ng-repeat="tag in $ctrl.article.tagList"
+                          >
+                            {tag}
+                          </li>
+                        ))}
+                      </ul>
                     </a>
-                    <span className="date">January 20th</span>
                   </div>
-                  <button className="btn btn-outline-primary btn-sm pull-xs-right">
-                    <i className="ion-heart"></i> 29
-                  </button>
-                </div>
-                <a href="" className="preview-link">
-                  <h1>How to build webapps that scale</h1>
-                  <p>This is the description for the post.</p>
-                  <span>Read more...</span>
-                </a>
-              </div>
-
-              <div className="article-preview">
-                <div className="article-meta">
-                  <a href="profile.html">
-                    <img src="http://i.imgur.com/N4VcUeJ.jpg" />
-                  </a>
-                  <div className="info">
-                    <a href="" className="author">
-                      Albert Pai
-                    </a>
-                    <span className="date">January 20th</span>
-                  </div>
-                  <button className="btn btn-outline-primary btn-sm pull-xs-right">
-                    <i className="ion-heart"></i> 32
-                  </button>
-                </div>
-                <a href="" className="preview-link">
-                  <h1>The song you won't ever stop singing. No matter how hard you try.</h1>
-                  <p>This is the description for the post.</p>
-                  <span>Read more...</span>
-                </a>
-              </div>
+                ))
+              )}
             </div>
 
             <div className="col-md-3">
               <div className="sidebar">
                 <p>Popular Tags</p>
 
-                <div className="tag-list">
-                  <a href="" className="tag-pill tag-default">
-                    programming
-                  </a>
-                  <a href="" className="tag-pill tag-default">
-                    javascript
-                  </a>
-                  <a href="" className="tag-pill tag-default">
-                    emberjs
-                  </a>
-                  <a href="" className="tag-pill tag-default">
-                    angularjs
-                  </a>
-                  <a href="" className="tag-pill tag-default">
-                    react
-                  </a>
-                  <a href="" className="tag-pill tag-default">
-                    mean
-                  </a>
-                  <a href="" className="tag-pill tag-default">
-                    node
-                  </a>
-                  <a href="" className="tag-pill tag-default">
-                    rails
-                  </a>
-                </div>
+                {tagIsLoading ? (
+                  <div> loading ... </div>
+                ) : (
+                  <div className="tag-list">
+                    {tagData!.map((tagData, index) => {
+                      return (
+                        <a key={index} href="" className="tag-pill tag-default">
+                          {tagData}
+                        </a>
+                      );
+                    })}
+                  </div>
+                )}
               </div>
             </div>
+
+            {!feedIsLoading && (
+              <nav>
+                <ul className="pagination">{pageButtonList()}</ul>
+              </nav>
+            )}
           </div>
         </div>
       </div>
