@@ -16,7 +16,10 @@ export const articleApi = {
     return response;
   },
   update: () => {},
-  delete: () => {},
+  delete: (slug: string) => {
+    const response = Axios.delete(`/articles/${slug}`);
+    return response;
+  },
 };
 
 export const feedApi = {
