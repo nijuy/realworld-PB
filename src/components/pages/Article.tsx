@@ -227,7 +227,7 @@ const Article = () => {
                   ></textarea>
                 </div>
                 <div className="card-footer">
-                  <img src="http://i.imgur.com/Qr71crq.jpg" className="comment-author-img" />
+                  <img src={user.user.image} className="comment-author-img" />
                   <button className="btn btn-sm btn-primary">Post Comment</button>
                 </div>
               </form>
