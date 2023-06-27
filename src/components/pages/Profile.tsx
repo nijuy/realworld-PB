@@ -38,10 +38,21 @@ const Profile = () => {
                   <img src={profileData.image} className="user-img" />
                   <h4>{profileData.username}</h4>
                   <p>{profileData.bio}</p>
-                  <button className="btn btn-sm btn-outline-secondary action-btn">
-                    <i className="ion-plus-round"></i>
-                    &nbsp; Follow Eric Simons
-                  </button>
+                  {user.user.username !== profileData.username ? (
+                    <button className="btn btn-sm btn-outline-secondary action-btn">
+                      <i className="ion-plus-round"></i>
+                      &nbsp; Follow {profileData.username}
+                    </button>
+                  ) : (
+                    <a
+                      ui-sref="app.settings"
+                      className="btn btn-sm btn-outline-secondary action-btn"
+                      ng-show="$ctrl.isUser"
+                      href="#/settings"
+                    >
+                      <i className="ion-gear-a"></i> Edit Profile Settings
+                    </a>
+                  )}
                 </div>
               </div>
             </div>
