@@ -5,6 +5,7 @@ import {
   INewArticleRequest,
   ISingleArticleResponse,
   INewCommentRequest,
+  IMultipleCommentsResponse,
 } from '../types/articleApi.type';
 
 export const articleApi = {
@@ -28,7 +29,10 @@ export const commentApi = {
     const response = Axios.post(`/articles/${slug}/comments`, commentData);
     return response;
   },
-  read: () => {},
+  read: (slug: string): Promise<AxiosResponse<IMultipleCommentsResponse>> => {
+    const response = Axios.get(`/articles/${slug}/comments`);
+    return response;
+  },
   delete: () => {},
 };
 
