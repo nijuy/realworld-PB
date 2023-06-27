@@ -21,8 +21,7 @@ const Signup = () => {
     password: '',
     username: '',
   };
-  const [signupResponseData, setSignupResponseData] =
-    useRecoilState<IGlobalUserData>(currentUserState);
+  const [user, setUser] = useRecoilState<IGlobalUserData>(currentUserState);
   const [signupStatusData, setSignupStatusData] = useState<ISignupError>();
 
   const emailRef = useRef<HTMLInputElement>(null);
@@ -46,7 +45,7 @@ const Signup = () => {
   const join = async (signupData: IJoinUserData) => {
     try {
       const response = await userApi.join({ user: signupData });
-      setSignupResponseData(response.data);
+      setUser(response.data);
       setToken(response.data.user.token);
       updateHeader(response.data.user.token);
     } catch (error) {
@@ -62,10 +61,10 @@ const Signup = () => {
   };
 
   useEffect(() => {
-    if (signupResponseData.user.token !== '') {
+    if (user.user.token !== '') {
       navigate('/');
     }
-  }, [signupResponseData]);
+  }, [user]);
 
   return (
     <>
