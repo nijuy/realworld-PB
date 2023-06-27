@@ -68,6 +68,17 @@ const Article = () => {
     }
   };
 
+  const deleteComment = async (commentId: number) => {
+    try {
+      if (slug !== undefined) {
+        await commentApi.delete(slug, commentId);
+        refetch();
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   const deleteArticle = async () => {
     try {
       if (slug !== undefined) {
@@ -239,7 +250,13 @@ const Article = () => {
                         {new Date(commentData?.createdAt).toLocaleDateString('en-US', dateOptions)}
                       </span>
                       <span className="mod-options" ng-show="$ctrl.canModify">
-                        <i className="ion-trash-a" ng-click="$ctrl.deleteCb()"></i>
+                        <i
+                          className="ion-trash-a"
+                          ng-click="$ctrl.deleteCb()"
+                          onClick={() => {
+                            deleteComment(commentData.id);
+                          }}
+                        ></i>
                       </span>
                     </div>
                   </div>
