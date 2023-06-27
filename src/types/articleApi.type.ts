@@ -45,6 +45,23 @@ export interface INewCommentRequest {
   };
 }
 
+export interface IComment {
+  id: number;
+  createdAt: string;
+  updateAt: string;
+  body: string;
+  author: {
+    username: string;
+    bio: string;
+    image: string;
+    following: boolean;
+  };
+}
+
+export interface IMultipleCommentsResponse {
+  comments: IComment[];
+}
+
 /**
  * @CRUD get
  * @Action getFeedData
