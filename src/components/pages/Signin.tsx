@@ -20,8 +20,7 @@ const Signin = () => {
     email: '',
     password: '',
   };
-  const [signinResponseData, setSigninResponseData] =
-    useRecoilState<IGlobalUserData>(currentUserState);
+  const [user, setUser] = useRecoilState<IGlobalUserData>(currentUserState);
   const [signinStatusData, setSigninStatusData] = useState<ISigninError>();
 
   const navigate = useNavigate();
@@ -43,7 +42,7 @@ const Signin = () => {
   const login = async (signinData: ILoginUserData) => {
     try {
       const response = await userApi.login({ user: signinData });
-      setSigninResponseData(response.data);
+      setUser(response.data);
       setToken(response.data.user.token);
       updateHeader(response.data.user.token);
     } catch (error) {
@@ -59,10 +58,10 @@ const Signin = () => {
   };
 
   useEffect(() => {
-    if (signinResponseData.user.token !== '') {
+    if (user.user.token !== '') {
       navigate('/');
     }
-  }, [signinResponseData]);
+  }, [user]);
 
   return (
     <>
