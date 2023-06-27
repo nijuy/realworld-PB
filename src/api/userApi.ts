@@ -29,7 +29,10 @@ export const userApi = {
 };
 
 export const profileApi = {
-  read: () => {},
+  read: (username: string) => {
+    const response = Axios.get(`/profiles/${username}`);
+    return response;
+  },
   follow: () => {},
   unfollow: () => {},
 };
