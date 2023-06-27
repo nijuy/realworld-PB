@@ -4,6 +4,7 @@ import {
   IMultipleArticlesResponse,
   INewArticleRequest,
   ISingleArticleResponse,
+  INewCommentRequest,
 } from '../types/articleApi.type';
 
 export const articleApi = {
@@ -20,6 +21,15 @@ export const articleApi = {
     const response = Axios.delete(`/articles/${slug}`);
     return response;
   },
+};
+
+export const commentApi = {
+  create: (slug: string, commentData: INewCommentRequest) => {
+    const response = Axios.post(`/articles/${slug}/comments`, commentData);
+    return response;
+  },
+  read: () => {},
+  delete: () => {},
 };
 
 export const feedApi = {
