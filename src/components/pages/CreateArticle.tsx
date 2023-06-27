@@ -67,8 +67,8 @@ const CreateArticle = () => {
 
   const createArticle = async (articleData: INewArticleRequest) => {
     try {
-      await articleApi.create(articleData);
-      navigate('/');
+      const response = await articleApi.create(articleData);
+      navigate(`/article/${response.data.article.slug}`);
     } catch (error) {
       const postError = error as AxiosError;
       if (postError.response !== undefined && postError.response.data !== null) {
