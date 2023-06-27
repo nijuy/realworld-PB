@@ -1,27 +1,52 @@
+import { useEffect, useState } from 'react';
+import { useParams } from 'react-router-dom';
 import Layout from '../layout/Layout';
+import { profileApi } from '../../api/userApi';
+import { IProfile } from '../../types/userApi.type';
+import { currentUserState } from '../../recoil/atom/currentUserData';
+import { useRecoilValue } from 'recoil';
 
 const Profile = () => {
+  const user = useRecoilValue(currentUserState);
+
+  const username = useParams().username;
+  const [profileData, setProfileData] = useState<IProfile>();
+
+  const getProfile = async () => {
+    try {
+      if (username !== undefined) {
+        const response = await profileApi.read(username);
+        setProfileData(response.data.profile);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    getProfile();
+  }, [username]);
+
   return (
     <Layout>
       <div className="profile-page">
-        <div className="user-info">
-          <div className="container">
-            <div className="row">
-              <div className="col-xs-12 col-md-10 offset-md-1">
-                <img src="http://i.imgur.com/Qr71crq.jpg" className="user-img" />
-                <h4>Eric Simons</h4>
-                <p>
-                  Cofounder @GoThinkster, lived in Aol's HQ for a few months, kinda looks like Peeta
-                  from the Hunger Games
-                </p>
-                <button className="btn btn-sm btn-outline-secondary action-btn">
-                  <i className="ion-plus-round"></i>
-                  &nbsp; Follow Eric Simons
-                </button>
+        {profileData && (
+          <div className="user-info">
+            <div className="container">
+              <div className="row">
+                <div className="col-xs-12 col-md-10 offset-md-1">
+                  <img src={profileData.image} className="user-img" />
+                  <h4>{profileData.username}</h4>
+                  <p>{profileData.bio}</p>
+                  <button className="btn btn-sm btn-outline-secondary action-btn">
+                    <i className="ion-plus-round"></i>
+                    &nbsp; Follow Eric Simons
+                  </button>
+                </div>
               </div>
             </div>
           </div>
-        </div>
+        )}
 
         <div className="container">
           <div className="row">
