@@ -1,9 +1,11 @@
 import Layout from '../layout/Layout';
+import { useRef } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
-import { articleApi } from '../../api/articlesApi';
+import { articleApi, commentApi } from '../../api/articlesApi';
 import { currentUserState } from '../../recoil/atom/currentUserData';
 import { useRecoilValue } from 'recoil';
+import { INewCommentRequest } from '../../types/articleApi.type';
 
 const Article = () => {
   const user = useRecoilValue(currentUserState);
@@ -13,6 +15,8 @@ const Article = () => {
   const navigate = useNavigate();
 
   const dateOptions = { year: 'numeric', month: 'long', day: 'numeric' };
+
+  const commentRef = useRef<HTMLTextAreaElement>(null);
 
   const { data: articleData } = useQuery({
     queryKey: ['article'],
@@ -27,6 +31,41 @@ const Article = () => {
       }
     },
   });
+
+  const { data: commentData, refetch } = useQuery({
+    queryKey: ['comment'],
+    queryFn: async () => {
+      try {
+        if (slug !== undefined) {
+          const response = await commentApi.read(slug);
+          return response.data.comments;
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    },
+  });
+
+  const onSubmitCommentData = (formEvent: React.FormEvent<HTMLFormElement>) => {
+    formEvent.preventDefault();
+    const commentData = {
+      comment: {
+        body: commentRef.current!.value,
+      },
+    };
+    addComment(commentData);
+  };
+
+  const addComment = async (commentData: INewCommentRequest) => {
+    try {
+      if (slug !== undefined) {
+        await commentApi.create(slug, commentData);
+        refetch();
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   const deleteArticle = async () => {
     try {
@@ -166,12 +205,13 @@ const Article = () => {
 
           <div className="row">
             <div className="col-xs-12 col-md-8 offset-md-2">
-              <form className="card comment-form">
+              <form className="card comment-form" onSubmit={onSubmitCommentData}>
                 <div className="card-block">
                   <textarea
                     className="form-control"
                     placeholder="Write a comment..."
                     rows={3}
+                    ref={commentRef}
                   ></textarea>
                 </div>
                 <div className="card-footer">
