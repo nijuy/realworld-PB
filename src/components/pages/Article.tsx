@@ -1,5 +1,5 @@
 import Layout from '../layout/Layout';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { articleApi } from '../../api/articlesApi';
 import { currentUserState } from '../../recoil/atom/currentUserData';
@@ -9,6 +9,8 @@ const Article = () => {
   const user = useRecoilValue(currentUserState);
 
   const slug = useParams().URLSlug;
+
+  const navigate = useNavigate();
 
   const dateOptions = { year: 'numeric', month: 'long', day: 'numeric' };
 
@@ -25,6 +27,17 @@ const Article = () => {
       }
     },
   });
+
+  const deleteArticle = async () => {
+    try {
+      if (slug !== undefined) {
+        await articleApi.delete(slug);
+        navigate('/');
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   return (
     <Layout>
@@ -73,6 +86,7 @@ const Article = () => {
                       className="btn btn-outline-danger btn-sm"
                       ng-class="{disabled: $ctrl.isDeleting}"
                       ng-click="$ctrl.deleteArticle()"
+                      onClick={deleteArticle}
                     >
                       <i className="ion-trash-a"></i> Delete Article
                     </button>
@@ -140,6 +154,7 @@ const Article = () => {
                       className="btn btn-outline-danger btn-sm"
                       ng-class="{disabled: $ctrl.isDeleting}"
                       ng-click="$ctrl.deleteArticle()"
+                      onClick={deleteArticle}
                     >
                       <i className="ion-trash-a"></i> Delete Article
                     </button>
