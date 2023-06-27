@@ -1,12 +1,20 @@
 import { Axios } from './api';
-import { IMultipleArticlesResponse, INewArticleRequest } from '../types/articleApi.type';
+import { AxiosResponse } from 'axios';
+import {
+  IMultipleArticlesResponse,
+  INewArticleRequest,
+  ISingleArticleResponse,
+} from '../types/articleApi.type';
 
 export const articleApi = {
   create: (articleData: INewArticleRequest) => {
     const response = Axios.post('/articles', articleData);
     return response;
   },
-  read: () => {},
+  read: (slug: string): Promise<AxiosResponse<ISingleArticleResponse>> => {
+    const response = Axios.get(`/articles/${slug}`);
+    return response;
+  },
   update: () => {},
   delete: () => {},
 };
