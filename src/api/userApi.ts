@@ -12,16 +12,8 @@ const userApi = {
     const response = Axios.get<IGlobalUserData>('/user');
     return response;
   },
-  modify: () => {
-    const response = Axios.put<IEditUserData>('/user', {
-      user: {
-        email: 'string',
-        password: 'string',
-        username: 'string',
-        bio: 'string',
-        image: 'string',
-      },
-    });
+  modify: (userData: { user: IEditUserData }): Promise<AxiosResponse<IGlobalUserData>> => {
+    const response = Axios.put('/user', userData);
     return response;
   },
 
