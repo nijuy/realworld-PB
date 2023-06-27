@@ -55,7 +55,7 @@ const Settings = () => {
       setUser(response.data);
       setToken(response.data.user.token);
       updateHeader(response.data.user.token);
-      navigate('/'); // profile page로 수정 필요
+      navigate(`/profile/${response.data.user.username}`);
     } catch (error) {
       console.log(error);
     }
