@@ -33,7 +33,10 @@ export const commentApi = {
     const response = Axios.get(`/articles/${slug}/comments`);
     return response;
   },
-  delete: () => {},
+  delete: (slug: string, commentId: number) => {
+    const response = Axios.delete(`/articles/${slug}/comments/${commentId}`);
+    return response;
+  },
 };
 
 export const feedApi = {
