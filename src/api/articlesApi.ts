@@ -1,4 +1,3 @@
-import { IFeedData } from '../types/articleApi.type';
 import { Axios } from './api';
 import { IMultipleArticlesResponse, INewArticleRequest } from '../types/articleApi.type';
 
@@ -18,7 +17,7 @@ export const feedApi = {
     if (offset) url += `&offset=${offset}`;
     if (tag) url += `&tag=${tag}`;
 
-    const response = Axios.get<IFeedData>(url);
+    const response = Axios.get<IMultipleArticlesResponse>(url);
     return response;
   },
 };
