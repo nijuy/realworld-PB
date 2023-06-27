@@ -1,31 +1,55 @@
 import Layout from '../layout/Layout';
+import { useParams } from 'react-router-dom';
+import { useQuery } from '@tanstack/react-query';
+import { articleApi } from '../../api/articlesApi';
 
 const Article = () => {
+  const slug = useParams().URLSlug;
+
+  const dateOptions = { year: 'numeric', month: 'long', day: 'numeric' };
+
+  const { data: articleData } = useQuery({
+    queryKey: ['article'],
+    queryFn: async () => {
+      try {
+        if (slug !== undefined) {
+          const response = await articleApi.read(slug);
+          return response.data.article;
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    },
+  });
+
   return (
     <Layout>
       <div className="article-page">
         <div className="banner">
           <div className="container">
-            <h1>How to build webapps that scale</h1>
+            <h1>{articleData?.title}</h1>
 
             <div className="article-meta">
               <a href="">
-                <img src="http://i.imgur.com/Qr71crq.jpg" />
+                <img src={articleData?.author.image} />
               </a>
               <div className="info">
                 <a href="" className="author">
-                  Eric Simons
+                  {articleData?.author.username}
                 </a>
-                <span className="date">January 20th</span>
+                <span className="date">
+                  {new Date(articleData?.createdAt).toLocaleDateString('en-US', dateOptions)}
+                </span>
               </div>
               <button className="btn btn-sm btn-outline-secondary">
                 <i className="ion-plus-round"></i>
-                &nbsp; Follow Eric Simons <span className="counter">(10)</span>
+                &nbsp; Follow {articleData?.author.username} <span className="counter"></span>
               </button>
               &nbsp;&nbsp;
               <button className="btn btn-sm btn-outline-primary">
                 <i className="ion-heart"></i>
-                &nbsp; Favorite Post <span className="counter">(29)</span>
+                &nbsp; Favorite Article
+                <span className="counter">({articleData?.favoritesCount})</span>
               </button>
             </div>
           </div>
@@ -33,13 +57,15 @@ const Article = () => {
 
         <div className="container page">
           <div className="row article-content">
-            <div className="col-md-12">
-              <p>
-                Web development technologies have evolved at an incredible clip over the past few
-                years.
-              </p>
-              <h2 id="introducing-ionic">Introducing RealWorld.</h2>
-              <p>It's a great solution for learning how other frameworks work.</p>
+            <div className="col-xs-12">
+              <p>{articleData?.body}</p>
+              <ul className="tag-list">
+                {articleData?.tagList.map((tagData, index) => (
+                  <li key={index} className="tag-default tag-pill tag-outline ng-binding ng-scope">
+                    {tagData}
+                  </li>
+                ))}
+              </ul>
             </div>
           </div>
 
@@ -48,22 +74,25 @@ const Article = () => {
           <div className="article-actions">
             <div className="article-meta">
               <a href="profile.html">
-                <img src="http://i.imgur.com/Qr71crq.jpg" />
+                <img src={articleData?.author.image} />
               </a>
               <div className="info">
                 <a href="" className="author">
-                  Eric Simons
+                  {articleData?.author.username}
                 </a>
-                <span className="date">January 20th</span>
+                <span className="date">
+                  {new Date(articleData?.createdAt).toLocaleDateString('en-US', dateOptions)}
+                </span>
               </div>
               <button className="btn btn-sm btn-outline-secondary">
                 <i className="ion-plus-round"></i>
-                &nbsp; Follow Eric Simons
+                &nbsp; Follow {articleData?.author.username}
               </button>
               &nbsp;
               <button className="btn btn-sm btn-outline-primary">
                 <i className="ion-heart"></i>
-                &nbsp; Favorite Post <span className="counter">(29)</span>
+                &nbsp; Favorite Article
+                <span className="counter">({articleData?.favoritesCount})</span>
               </button>
             </div>
           </div>
