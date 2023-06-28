@@ -22,7 +22,6 @@ const Home = () => {
         console.log(error);
       }
     },
-    staleTime: Infinity,
   });
 
   const {
