@@ -8,7 +8,7 @@ import { IError } from '../../types/error.type';
 import Layout from '../layout/Layout';
 import { userApi } from '../../api/userApi';
 import ErrorPrint from '../ErrorPrint';
-import { setToken } from '../../services/TokenService';
+import { getToken, setToken } from '../../services/TokenService';
 import { updateHeader } from '../../api/api';
 
 interface ISignupError extends IError {
@@ -21,7 +21,7 @@ const Signup = () => {
     password: '',
     username: '',
   };
-  const [user, setUser] = useRecoilState<IGlobalUserData>(currentUserState);
+  const [_, setUser] = useRecoilState<IGlobalUserData>(currentUserState);
   const [signupStatusData, setSignupStatusData] = useState<ISignupError>();
 
   const emailRef = useRef<HTMLInputElement>(null);
@@ -48,6 +48,7 @@ const Signup = () => {
       setUser(response.data);
       setToken(response.data.user.token);
       updateHeader(response.data.user.token);
+      navigate('/');
     } catch (error) {
       const signupError = error as AxiosError;
       if (signupError.response !== undefined && signupError.response.data !== null) {
@@ -61,10 +62,10 @@ const Signup = () => {
   };
 
   useEffect(() => {
-    if (user.user.token !== '') {
+    if (getToken() !== null) {
       navigate('/');
     }
-  }, [user]);
+  }, []);
 
   return (
     <>
