@@ -31,7 +31,7 @@ const Home = () => {
     queryKey: ['feed'],
     queryFn: async () => {
       try {
-        const response = await feedApi.getGlobalFeed(offset);
+        const response = await feedApi.getFeed({ offset: offset });
         return response.data;
       } catch (error) {
         console.log(error);

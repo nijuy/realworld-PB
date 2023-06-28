@@ -1,5 +1,6 @@
 import { Axios } from './api';
 import { IMultipleArticlesResponse, INewArticleRequest } from '../types/articleApi.type';
+import qs from 'qs';
 
 export const articleApi = {
   create: (articleData: INewArticleRequest) => {
@@ -12,12 +13,21 @@ export const articleApi = {
 };
 
 export const feedApi = {
-  getGlobalFeed: (offset?: number, tag?: string) => {
-    let url = '/articles?limit=10';
-    if (offset) url += `&offset=${offset}`;
-    if (tag) url += `&tag=${tag}`;
+  getFeed: ({
+    offset,
+    tag,
+    author,
+    favorited,
+  }: {
+    offset?: number;
+    tag?: string;
+    author?: string;
+    favorited?: string;
+  }) => {
+    const response = Axios.get<IMultipleArticlesResponse>(
+      `/articles?${qs.stringify({ limit: 10, offset, tag, author, favorited })}`,
+    );
 
-    const response = Axios.get<IMultipleArticlesResponse>(url);
     return response;
   },
 };
