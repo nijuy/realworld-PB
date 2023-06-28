@@ -40,9 +40,9 @@ const EditArticle = () => {
     try {
       if (slug !== undefined) {
         const articleData = {
-          title: titleRef.current!.value,
-          description: descriptionRef.current!.value,
-          body: bodyRef.current!.value,
+          title: titleRef.current!.value || (article?.article.title as string),
+          description: descriptionRef.current!.value || (article?.article.description as string),
+          body: bodyRef.current!.value || (article?.article.body as string),
           tagList: tagList || [],
         };
         await articleApi.update(slug, { article: articleData });
