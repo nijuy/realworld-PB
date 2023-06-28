@@ -7,7 +7,9 @@ const token = getToken();
 export const Axios = axios.create({
   baseURL: BASE_URL,
   headers: {
-    Authorization: `Bearer ${token}`,
+    common: {
+      Authorization: token && `Bearer ${token}`,
+    },
     'Content-Type': 'application/json',
   },
 });
