@@ -2,12 +2,12 @@ import Layout from '../layout/Layout';
 import tagApi from '../../api/tagApi';
 import { useQuery } from '@tanstack/react-query';
 import { feedApi } from '../../api/articlesApi';
-import { useRecoilState } from 'recoil';
+import { useRecoilValue } from 'recoil';
 import { currentUserState } from '../../recoil/atom/currentUserData';
 import { useEffect } from 'react';
 
 const Home = () => {
-  const [user] = useRecoilState(currentUserState);
+  const user = useRecoilValue(currentUserState);
   let offset = 0;
 
   const { isLoading: tagIsLoading, data: tagData } = useQuery({
