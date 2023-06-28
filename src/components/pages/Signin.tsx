@@ -16,10 +16,6 @@ interface ISigninError extends IError {
 }
 
 const Signin = () => {
-  let signinData: ILoginUserData = {
-    email: '',
-    password: '',
-  };
   const [_, setUser] = useRecoilState(currentUserState);
   const [signinStatusData, setSigninStatusData] = useState<ISigninError>();
 
@@ -31,7 +27,7 @@ const Signin = () => {
   const onClickSigninData = (buttonEvent: React.MouseEvent<HTMLButtonElement>) => {
     if (emailRef.current?.checkValidity()) {
       buttonEvent.preventDefault();
-      signinData = {
+      const signinData = {
         email: emailRef.current.value,
         password: passwordRef.current!.value,
       };
