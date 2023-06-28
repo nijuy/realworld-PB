@@ -1,4 +1,4 @@
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import Layout from '../layout/Layout';
 import { useEffect, useState, useRef } from 'react';
 import { articleApi } from '../../api/articlesApi';
@@ -23,6 +23,8 @@ const EditArticle = () => {
   const bodyRef = useRef<HTMLTextAreaElement>(null);
   const tagRef = useRef<HTMLInputElement>(null);
 
+  const navigate = useNavigate();
+
   const getArticle = async () => {
     try {
       if (slug !== undefined) {
@@ -45,7 +47,8 @@ const EditArticle = () => {
           body: bodyRef.current!.value || (article?.article.body as string),
           tagList: tagList || [],
         };
-        await articleApi.update(slug, { article: articleData });
+        const response = await articleApi.update(slug, { article: articleData });
+        navigate(`/article/${response.data.article.slug}`);
       }
     } catch (error) {
       const postError = error as AxiosError;
