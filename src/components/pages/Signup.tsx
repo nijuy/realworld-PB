@@ -2,7 +2,7 @@ import { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useRecoilState } from 'recoil';
 import { currentUserState } from '../../recoil/atom/currentUserData';
-import { IJoinUserData, IGlobalUserData } from '../../types/userApi.type';
+import { IJoinUserData } from '../../types/userApi.type';
 import { AxiosError } from 'axios';
 import { IError } from '../../types/error.type';
 import Layout from '../layout/Layout';
@@ -21,7 +21,7 @@ const Signup = () => {
     password: '',
     username: '',
   };
-  const [_, setUser] = useRecoilState<IGlobalUserData>(currentUserState);
+  const [_, setUser] = useRecoilState(currentUserState);
   const [signupStatusData, setSignupStatusData] = useState<ISignupError>();
 
   const emailRef = useRef<HTMLInputElement>(null);
