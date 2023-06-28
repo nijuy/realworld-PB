@@ -3,12 +3,20 @@ import Layout from '../layout/Layout';
 import { useEffect, useState, useRef } from 'react';
 import { articleApi } from '../../api/articlesApi';
 import { ISingleArticleResponse } from '../../types/articleApi.type';
+import { AxiosError } from 'axios';
+import { IError } from '../../types/error.type';
+import ErrorPrint from '../ErrorPrint';
+
+interface IPostError extends IError {
+  postStatus: boolean;
+}
 
 const EditArticle = () => {
   const slug = useParams().URLSlug;
 
   const [article, setArticle] = useState<ISingleArticleResponse>();
   const [tagList, setTagList] = useState<string[]>();
+  const [postStatusData, setPostStatusData] = useState<IPostError>();
 
   const titleRef = useRef<HTMLInputElement>(null);
   const descriptionRef = useRef<HTMLInputElement>(null);
@@ -40,7 +48,14 @@ const EditArticle = () => {
         await articleApi.update(slug, { article: articleData });
       }
     } catch (error) {
-      console.log(error);
+      const postError = error as AxiosError;
+      if (postError.response !== undefined && postError.response.data !== null) {
+        const response = postError.response.data as IError;
+        setPostStatusData({
+          postStatus: false,
+          errors: response.errors,
+        });
+      }
     }
   };
 
@@ -75,6 +90,11 @@ const EditArticle = () => {
         <div className="container page">
           <div className="row">
             <div className="col-md-10 offset-md-1 col-xs-12">
+              {postStatusData && !postStatusData.postStatus && (
+                <ul className="error-messages" ng-show="$ctrl.errors">
+                  <ErrorPrint errors={postStatusData.errors} />
+                </ul>
+              )}
               <form onSubmit={updateArticle}>
                 <fieldset>
                   <fieldset className="form-group">
