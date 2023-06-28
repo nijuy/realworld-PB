@@ -52,9 +52,7 @@ const Home = () => {
           className={`page-item ${currentPage === i ? 'active' : ''}`}
           onClick={onClickPageButton}
         >
-          <a className="page-link" href="">
-            {i}
-          </a>
+          <a className="page-link">{i}</a>
         </li>,
       );
     }
@@ -62,8 +60,7 @@ const Home = () => {
     return buttonList;
   };
 
-  const onClickPageButton = (e: React.MouseEvent<HTMLAnchorElement>) => {
-    e.preventDefault();
+  const onClickPageButton = (e: React.MouseEvent<HTMLLIElement>) => {
     setOffset(e.target.innerText * 10 - 10);
   };
 
