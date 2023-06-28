@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { userApi } from '../../api/userApi';
-import { ILoginUserData, IGlobalUserData } from '../../types/userApi.type';
+import { ILoginUserData } from '../../types/userApi.type';
 import { AxiosError } from 'axios';
 import { IError } from '../../types/error.type';
 import ErrorPrint from '../ErrorPrint';
@@ -20,7 +20,7 @@ const Signin = () => {
     email: '',
     password: '',
   };
-  const [_, setUser] = useRecoilState<IGlobalUserData>(currentUserState);
+  const [_, setUser] = useRecoilState(currentUserState);
   const [signinStatusData, setSigninStatusData] = useState<ISigninError>();
 
   const navigate = useNavigate();
