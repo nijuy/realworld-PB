@@ -12,7 +12,19 @@ export const articleApi = {
 };
 
 export const feedApi = {
-  getFeed: ({ offset, tag }: { offset?: number; tag?: string }) => {
+  getFeed: ({
+    offset,
+    tag,
+    author,
+    favorited,
+    limit,
+  }: {
+    offset?: number;
+    tag?: string;
+    author?: string;
+    favorited?: string;
+    limit?: number;
+  }) => {
     let url = '/articles?limit=10';
     if (offset) url += `&offset=${offset}`;
     if (tag) url += `&tag=${tag}`;
