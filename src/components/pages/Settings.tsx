@@ -33,18 +33,16 @@ const Settings = () => {
     navigate('/');
   };
 
-  const onSubmitUserData = (buttonEvent: React.MouseEvent<HTMLButtonElement>) => {
-    if (emailRef.current?.checkValidity()) {
-      buttonEvent.preventDefault();
-      const userData = {
-        username: usernameRef.current!.value,
-        email: emailRef.current.value,
-        password: passwordRef.current!.value,
-        bio: bioRef.current!.value,
-        image: imageRef.current!.value,
-      };
-      update(userData);
-    }
+  const onSubmitUserData = (formEvent: React.MouseEvent<HTMLFormElement>) => {
+    formEvent.preventDefault();
+    const userData = {
+      username: usernameRef.current!.value,
+      email: emailRef.current!.value,
+      password: passwordRef.current!.value,
+      bio: bioRef.current!.value,
+      image: imageRef.current!.value,
+    };
+    update(userData);
   };
 
   const update = async (userData: IEditUserData) => {
@@ -73,7 +71,7 @@ const Settings = () => {
             <div className="col-md-6 offset-md-3 col-xs-12">
               <h1 className="text-xs-center">Your Settings</h1>
 
-              <form>
+              <form onSubmit={onSubmitUserData}>
                 <fieldset>
                   <fieldset className="form-group">
                     <input
@@ -120,12 +118,7 @@ const Settings = () => {
                       ref={passwordRef}
                     />
                   </fieldset>
-                  <button
-                    className="btn btn-lg btn-primary pull-xs-right"
-                    onClick={onSubmitUserData}
-                  >
-                    Update Settings
-                  </button>
+                  <button className="btn btn-lg btn-primary pull-xs-right">Update Settings</button>
                 </fieldset>
               </form>
               <hr />
