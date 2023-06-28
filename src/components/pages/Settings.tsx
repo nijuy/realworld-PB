@@ -11,8 +11,6 @@ import { updateHeader } from '../../api/api';
 const Settings = () => {
   const [user, setUser] = useRecoilState(currentUserState);
 
-  let userData: IEditUserData = { username: '', email: '', password: '', bio: '', image: '' };
-
   const navigate = useNavigate();
 
   const emailRef = useRef<HTMLInputElement>(null);
@@ -38,7 +36,7 @@ const Settings = () => {
   const onSubmitUserData = (buttonEvent: React.MouseEvent<HTMLButtonElement>) => {
     if (emailRef.current?.checkValidity()) {
       buttonEvent.preventDefault();
-      userData = {
+      const userData = {
         username: usernameRef.current!.value,
         email: emailRef.current.value,
         password: passwordRef.current!.value,
