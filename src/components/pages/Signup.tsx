@@ -25,16 +25,14 @@ const Signup = () => {
 
   const navigate = useNavigate();
 
-  const onClickSignupData = (buttonEvent: React.MouseEvent<HTMLButtonElement>) => {
-    if (emailRef.current?.checkValidity()) {
-      buttonEvent.preventDefault();
-      const signupData = {
-        email: emailRef.current.value,
-        username: usernameRef.current!.value,
-        password: passwordRef.current!.value,
-      };
-      join(signupData);
-    }
+  const onSubmitSignupData = (formEvent: React.MouseEvent<HTMLFormElement>) => {
+    formEvent.preventDefault();
+    const signupData = {
+      email: emailRef.current!.value,
+      username: usernameRef.current!.value,
+      password: passwordRef.current!.value,
+    };
+    join(signupData);
   };
 
   const join = async (signupData: IJoinUserData) => {
@@ -80,7 +78,7 @@ const Signup = () => {
                   </ul>
                 )}
 
-                <form>
+                <form onSubmit={onSubmitSignupData}>
                   <fieldset className="form-group">
                     <fieldset className="form-group">
                       <input
@@ -106,12 +104,7 @@ const Signup = () => {
                     />
                   </fieldset>
 
-                  <button
-                    className="btn btn-lg btn-primary pull-xs-right"
-                    onClick={onClickSignupData}
-                  >
-                    Sign Up
-                  </button>
+                  <button className="btn btn-lg btn-primary pull-xs-right">Sign Up</button>
                 </form>
               </div>
             </div>
