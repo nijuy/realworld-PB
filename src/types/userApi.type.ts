@@ -36,3 +36,23 @@ export interface IEditUserData {
 export interface IGlobalUserData {
   user: { username: string; email: string; token: string; bio: string; image: string };
 }
+
+/**
+ * @CRUD
+ * @ACTION
+ */
+export interface IProfileResponse {
+  profile: {
+    username: string;
+    bio: string;
+    image: string;
+    following: boolean;
+  };
+}
+
+export interface IProfile {
+  username: string;
+  bio: string;
+  image: string;
+  following: boolean;
+}

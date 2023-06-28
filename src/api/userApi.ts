@@ -7,7 +7,7 @@ import {
   ILoginUserData,
 } from '../types/userApi.type';
 
-const userApi = {
+export const userApi = {
   get: () => {
     const response = Axios.get<IGlobalUserData>('/user');
     return response;
@@ -28,4 +28,11 @@ const userApi = {
   },
 };
 
-export default userApi;
+export const profileApi = {
+  read: (username: string) => {
+    const response = Axios.get(`/profiles/${username}`);
+    return response;
+  },
+  follow: () => {},
+  unfollow: () => {},
+};
