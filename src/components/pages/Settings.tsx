@@ -5,7 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import { useEffect, useRef } from 'react';
 import { userApi } from '../../api/userApi';
 import { IEditUserData } from '../../types/userApi.type';
-import { removeItemToken, setToken } from '../../services/TokenService';
+import { getToken, removeItemToken, setToken } from '../../services/TokenService';
 import { updateHeader } from '../../api/api';
 
 const Settings = () => {
@@ -62,7 +62,7 @@ const Settings = () => {
   };
 
   useEffect(() => {
-    if (user.user.token === '') {
+    if (getToken() === null) {
       navigate('/');
     }
   }, []);
