@@ -8,7 +8,7 @@ import ErrorPrint from '../ErrorPrint';
 import Layout from '../layout/Layout';
 import { useRecoilState } from 'recoil';
 import { currentUserState } from '../../recoil/atom/currentUserData';
-import { setToken } from '../../services/TokenService';
+import { getToken, setToken } from '../../services/TokenService';
 import { updateHeader } from '../../api/api';
 
 interface ISigninError extends IError {
@@ -20,7 +20,7 @@ const Signin = () => {
     email: '',
     password: '',
   };
-  const [user, setUser] = useRecoilState<IGlobalUserData>(currentUserState);
+  const [_, setUser] = useRecoilState<IGlobalUserData>(currentUserState);
   const [signinStatusData, setSigninStatusData] = useState<ISigninError>();
 
   const navigate = useNavigate();
@@ -45,6 +45,7 @@ const Signin = () => {
       setUser(response.data);
       setToken(response.data.user.token);
       updateHeader(response.data.user.token);
+      navigate('/');
     } catch (error) {
       const signinError = error as AxiosError;
       if (signinError.response !== undefined && signinError.response.data !== null) {
@@ -58,10 +59,10 @@ const Signin = () => {
   };
 
   useEffect(() => {
-    if (user.user.token !== '') {
+    if (getToken() !== null) {
       navigate('/');
     }
-  }, [user]);
+  }, []);
 
   return (
     <>
