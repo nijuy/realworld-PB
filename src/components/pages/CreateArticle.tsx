@@ -23,15 +23,6 @@ const CreateArticle = () => {
   const [tagList, setTagList] = useState<string[]>([]);
   const [postStatusData, setPostStatusData] = useState<IPostError>();
 
-  let articleData: INewArticleRequest = {
-    article: {
-      title: '',
-      description: '',
-      body: '',
-      tagList: [],
-    },
-  };
-
   const addTag = () => {
     const newTag = tagRef.current?.value || '';
 
@@ -54,7 +45,7 @@ const CreateArticle = () => {
   };
 
   const onSubmitArticle = () => {
-    articleData = {
+    const articleData = {
       article: {
         title: titleRef.current!.value,
         description: descriptionRef.current!.value,
