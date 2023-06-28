@@ -13,12 +13,18 @@ const Profile = () => {
 
   const username = useParams().username;
 
+  const [offset, setOffset] = useState(0);
+
   const [profileData, setProfileData] = useState<IProfile>();
   const [isMyArticles, setIsMyArticles] = useState(true);
 
   const dateOptions = { year: 'numeric', month: 'long', day: 'numeric' };
 
-  const { isLoading: myTabIsLoading, data: myArticlesData } = useQuery({
+  const {
+    isLoading: myTabIsLoading,
+    data: myArticlesData,
+    refetch: myTabRefetch,
+  } = useQuery({
     queryKey: ['myArticles'],
     queryFn: async () => {
       try {
@@ -32,7 +38,11 @@ const Profile = () => {
     },
   });
 
-  const { isLoading: favoritedTabIsLoading, data: favoritedArticlesData } = useQuery({
+  const {
+    isLoading: favoritedTabIsLoading,
+    data: favoritedArticlesData,
+    refetch: favoritedTabRefecth,
+  } = useQuery({
     queryKey: ['favorited'],
     queryFn: async () => {
       try {
@@ -59,11 +69,44 @@ const Profile = () => {
 
   const onClickTab = () => {
     setIsMyArticles(!isMyArticles);
+    setOffset(0);
+  };
+
+  const onClickPageButton = (e: React.MouseEvent<HTMLLIElement>) => {
+    setOffset(e.target.innerText * 10 - 10);
+  };
+
+  const pageButtonList = (articlesCount: number) => {
+    const buttonCount = articlesCount / 10 + 1;
+    const buttonList: React.ReactNode[] = [];
+    const currentPage = (offset + 10) / 10;
+
+    for (let i = 1; i <= buttonCount; i++) {
+      buttonList.push(
+        <li
+          key={i}
+          className={`page-item ${currentPage === i ? 'active' : ''}`}
+          onClick={onClickPageButton}
+        >
+          <a className="page-link ng-binding">{i}</a>
+        </li>,
+      );
+    }
+
+    return buttonList;
   };
 
   useEffect(() => {
     getProfile();
   }, [username]);
+
+  useEffect(() => {
+    if (isMyArticles) {
+      myTabRefetch();
+    } else {
+      favoritedTabRefecth();
+    }
+  }, [offset]);
 
   return (
     <Layout>
@@ -126,41 +169,46 @@ const Profile = () => {
                     No articles are here... yet.
                   </div>
                 ) : (
-                  myArticlesData!.articles.map((articleData, index) => (
-                    <div className="article-preview" key={index}>
-                      <div className="article-meta">
-                        <a href={`/profile/${articleData.author.username}`}>
-                          <img src={articleData.author.image} />
-                        </a>
-                        <div className="info">
-                          <a href={`/profile/${articleData.author.username}`} className="author">
-                            {articleData.author.username}
+                  <>
+                    {myArticlesData!.articles.map((articleData, index) => (
+                      <div className="article-preview" key={index}>
+                        <div className="article-meta">
+                          <a href={`/profile/${articleData.author.username}`}>
+                            <img src={articleData.author.image} />
                           </a>
-                          <span className="date">
-                            {new Date(articleData.createdAt).toLocaleDateString(
-                              'en-US',
-                              dateOptions,
-                            )}
-                          </span>
+                          <div className="info">
+                            <a href={`/profile/${articleData.author.username}`} className="author">
+                              {articleData.author.username}
+                            </a>
+                            <span className="date">
+                              {new Date(articleData.createdAt).toLocaleDateString(
+                                'en-US',
+                                dateOptions,
+                              )}
+                            </span>
+                          </div>
+                          <button className="btn btn-outline-primary btn-sm pull-xs-right">
+                            <i className="ion-heart"></i> {articleData.favoritesCount}
+                          </button>
                         </div>
-                        <button className="btn btn-outline-primary btn-sm pull-xs-right">
-                          <i className="ion-heart"></i> {articleData.favoritesCount}
-                        </button>
+                        <a href={`/article/${articleData.slug}`} className="preview-link">
+                          <h1>{articleData.title}</h1>
+                          <p>{articleData.description}</p>
+                          <span>Read more...</span>
+                          <ul className="tag-list">
+                            {articleData.tagList.map((tagData, tagIndex) => (
+                              <li className="tag-default tag-pill tag-outline" key={tagIndex}>
+                                {tagData}
+                              </li>
+                            ))}
+                          </ul>
+                        </a>
                       </div>
-                      <a href={`/article/${articleData.slug}`} className="preview-link">
-                        <h1>{articleData.title}</h1>
-                        <p>{articleData.description}</p>
-                        <span>Read more...</span>
-                        <ul className="tag-list">
-                          {articleData.tagList.map((tagData, tagIndex) => (
-                            <li className="tag-default tag-pill tag-outline" key={tagIndex}>
-                              {tagData}
-                            </li>
-                          ))}
-                        </ul>
-                      </a>
-                    </div>
-                  ))
+                    ))}
+                    <nav>
+                      <ul className="pagination">{pageButtonList(myArticlesData.articlesCount)}</ul>
+                    </nav>
+                  </>
                 ))}
 
               {!isMyArticles &&
@@ -176,41 +224,48 @@ const Profile = () => {
                     No articles are here... yet.
                   </div>
                 ) : (
-                  favoritedArticlesData!.articles.map((articleData, index) => (
-                    <div className="article-preview" key={index}>
-                      <div className="article-meta">
-                        <a href={`/profile/${articleData.author.username}`}>
-                          <img src={articleData.author.image} />
-                        </a>
-                        <div className="info">
-                          <a href={`/profile/${articleData.author.username}`} className="author">
-                            {articleData.author.username}
+                  <>
+                    {favoritedArticlesData!.articles.map((articleData, index) => (
+                      <div className="article-preview" key={index}>
+                        <div className="article-meta">
+                          <a href={`/profile/${articleData.author.username}`}>
+                            <img src={articleData.author.image} />
                           </a>
-                          <span className="date">
-                            {new Date(articleData.createdAt).toLocaleDateString(
-                              'en-US',
-                              dateOptions,
-                            )}
-                          </span>
+                          <div className="info">
+                            <a href={`/profile/${articleData.author.username}`} className="author">
+                              {articleData.author.username}
+                            </a>
+                            <span className="date">
+                              {new Date(articleData.createdAt).toLocaleDateString(
+                                'en-US',
+                                dateOptions,
+                              )}
+                            </span>
+                          </div>
+                          <button className="btn btn-outline-primary btn-sm pull-xs-right">
+                            <i className="ion-heart"></i> {articleData.favoritesCount}
+                          </button>
                         </div>
-                        <button className="btn btn-outline-primary btn-sm pull-xs-right">
-                          <i className="ion-heart"></i> {articleData.favoritesCount}
-                        </button>
+                        <a href={`/article/${articleData.slug}`} className="preview-link">
+                          <h1>{articleData.title}</h1>
+                          <p>{articleData.description}</p>
+                          <span>Read more...</span>
+                          <ul className="tag-list">
+                            {articleData.tagList.map((tagData, tagIndex) => (
+                              <li className="tag-default tag-pill tag-outline" key={tagIndex}>
+                                {tagData}
+                              </li>
+                            ))}
+                          </ul>
+                        </a>
                       </div>
-                      <a href={`/article/${articleData.slug}`} className="preview-link">
-                        <h1>{articleData.title}</h1>
-                        <p>{articleData.description}</p>
-                        <span>Read more...</span>
-                        <ul className="tag-list">
-                          {articleData.tagList.map((tagData, tagIndex) => (
-                            <li className="tag-default tag-pill tag-outline" key={tagIndex}>
-                              {tagData}
-                            </li>
-                          ))}
-                        </ul>
-                      </a>
-                    </div>
-                  ))
+                    ))}
+                    <nav>
+                      <ul className="pagination">
+                        {pageButtonList(favoritedArticlesData.articlesCount)}
+                      </ul>
+                    </nav>
+                  </>
                 ))}
             </div>
           </div>
