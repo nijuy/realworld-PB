@@ -17,13 +17,11 @@ export const feedApi = {
     tag,
     author,
     favorited,
-    limit,
   }: {
     offset?: number;
     tag?: string;
     author?: string;
     favorited?: string;
-    limit?: number;
   }) => {
     let url = '/articles?limit=10';
     if (offset) url += `&offset=${offset}`;
