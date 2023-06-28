@@ -8,7 +8,9 @@ import { useState, useEffect } from 'react';
 
 const Home = () => {
   const user = useRecoilValue(currentUserState);
+
   const [offset, setOffset] = useState(0);
+  const [isMyArticles, setIsMyArticles] = useState(false);
 
   const { isLoading: tagIsLoading, data: tagData } = useQuery({
     queryKey: ['tags'],
@@ -24,11 +26,11 @@ const Home = () => {
   });
 
   const {
-    isLoading: feedIsLoading,
-    refetch,
-    data: feedData,
+    isLoading: globalTabIsLoading,
+    refetch: globalTabRefetch,
+    data: globalArticlesData,
   } = useQuery({
-    queryKey: ['feed'],
+    queryKey: ['globalArticles'],
     queryFn: async () => {
       try {
         const response = await feedApi.getFeed({ offset: offset });
@@ -40,8 +42,26 @@ const Home = () => {
     staleTime: 60000,
   });
 
-  const pageButtonList = () => {
-    const buttonCount = feedData.articlesCount / 10 + 1;
+  const {
+    isLoading: myTabIsLoading,
+    data: myArticlesData,
+    refetch: myTabRefetch,
+  } = useQuery({
+    queryKey: ['myArticles'],
+    queryFn: async () => {
+      try {
+        if (user.user.username !== undefined) {
+          const response = await feedApi.getFollowingFeed(offset);
+          return response.data;
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    },
+  });
+
+  const pageButtonList = (articlesCount: number) => {
+    const buttonCount = articlesCount / 10 + 1;
     const buttonList: React.ReactNode[] = [];
     const currentPage = (offset + 10) / 10;
 
@@ -64,8 +84,17 @@ const Home = () => {
     setOffset(e.target.innerText * 10 - 10);
   };
 
+  const onClickTab = () => {
+    setIsMyArticles(!isMyArticles);
+    setOffset(0);
+  };
+
   useEffect(() => {
-    refetch();
+    if (isMyArticles) {
+      myTabRefetch();
+    } else {
+      globalTabRefetch();
+    }
   }, [user, offset]);
 
   return (
@@ -85,53 +114,111 @@ const Home = () => {
                 <ul className="nav nav-pills outline-active">
                   {user.user.token && (
                     <li className="nav-item">
-                      <a className="nav-link disabled" href="">
+                      <a
+                        className={`nav-link${isMyArticles ? ' active' : ''}`}
+                        onClick={onClickTab}
+                      >
                         Your Feed
                       </a>
                     </li>
                   )}
                   <li className="nav-item">
-                    <a className="nav-link active" href="">
+                    <a className={`nav-link${!isMyArticles ? ' active' : ''}`} onClick={onClickTab}>
                       Global Feed
                     </a>
                   </li>
                 </ul>
               </div>
 
-              {feedIsLoading ? (
-                <div> loading ... </div>
-              ) : (
-                feedData?.articles.map((article, index) => (
-                  <div key={index} className="article-preview">
-                    <div className="article-meta">
-                      <a href="profile.html">
-                        <img src={article.author.image} />
-                      </a>
-                      <div className="info">
-                        <a href="" className="author">
-                          {article.author.username}
+              {!isMyArticles &&
+                (globalTabIsLoading ? (
+                  <div> loading ... </div>
+                ) : (
+                  <>
+                    {globalArticlesData?.articles.map((article, index) => (
+                      <div key={index} className="article-preview">
+                        <div className="article-meta">
+                          <a href="profile.html">
+                            <img src={article.author.image} />
+                          </a>
+                          <div className="info">
+                            <a href="" className="author">
+                              {article.author.username}
+                            </a>
+                            <span className="date">January 20th</span>
+                          </div>
+                          <button className="btn btn-outline-primary btn-sm pull-xs-right">
+                            <i className="ion-heart"></i> {article.favoritesCount}
+                          </button>
+                        </div>
+                        <a href="" className="preview-link">
+                          <h1>{article.title}</h1>
+                          <p>{article.description}</p>
+                          <span>Read more...</span>
+                          <ul className="tag-list">
+                            {article.tagList.map((tag, index) => (
+                              <li key={index} className="tag-default tag-pill tag-outline">
+                                {tag}
+                              </li>
+                            ))}
+                          </ul>
                         </a>
-                        <span className="date">January 20th</span>
                       </div>
-                      <button className="btn btn-outline-primary btn-sm pull-xs-right">
-                        <i className="ion-heart"></i> {article.favoritesCount}
-                      </button>
-                    </div>
-                    <a href="" className="preview-link">
-                      <h1>{article.title}</h1>
-                      <p>{article.description}</p>
-                      <span>Read more...</span>
-                      <ul className="tag-list">
-                        {article.tagList.map((tag, index) => (
-                          <li key={index} className="tag-default tag-pill tag-outline">
-                            {tag}
-                          </li>
-                        ))}
+                    ))}
+                    <nav>
+                      <ul className="pagination">
+                        {pageButtonList(globalArticlesData?.articlesCount as number)}
                       </ul>
-                    </a>
-                  </div>
-                ))
-              )}
+                    </nav>
+                  </>
+                ))}
+
+              {isMyArticles &&
+                (myTabIsLoading ? (
+                  <div className="article-preview">Loading articles...</div>
+                ) : !myArticlesData?.articlesCount ? (
+                  <div className="article-preview">No articles are here... yet.</div>
+                ) : (
+                  <>
+                    {myArticlesData?.articles.map((article, index) => (
+                      <div key={index} className="article-preview">
+                        <div className="article-meta">
+                          <a href="profile.html">
+                            <img src={article.author.image} />
+                          </a>
+                          <div className="info">
+                            <a href="" className="author">
+                              {article.author.username}
+                            </a>
+                            <span className="date">January 20th</span>
+                          </div>
+                          <button className="btn btn-outline-primary btn-sm pull-xs-right">
+                            <i className="ion-heart"></i> {article.favoritesCount}
+                          </button>
+                        </div>
+                        <a href="" className="preview-link">
+                          <h1>{article.title}</h1>
+                          <p>{article.description}</p>
+                          <span>Read more...</span>
+                          <ul className="tag-list">
+                            {article.tagList.map((tag, index) => (
+                              <li key={index} className="tag-default tag-pill tag-outline">
+                                {tag}
+                              </li>
+                            ))}
+                          </ul>
+                        </a>
+                      </div>
+                    ))}
+                    <nav>
+                      <ul className="pagination">
+                        <ul className="pagination">
+                          {pageButtonList(myArticlesData?.articlesCount)}
+                        </ul>
+                      </ul>
+                    </nav>
+                  </>
+                ))}
             </div>
 
             <div className="col-md-3">
@@ -153,12 +240,6 @@ const Home = () => {
                 )}
               </div>
             </div>
-
-            {!feedIsLoading && (
-              <nav>
-                <ul className="pagination">{pageButtonList()}</ul>
-              </nav>
-            )}
           </div>
         </div>
       </div>
