@@ -4,6 +4,7 @@ import { useQuery } from '@tanstack/react-query';
 import { feedApi } from '../../api/articlesApi';
 import { useRecoilState } from 'recoil';
 import { currentUserState } from '../../recoil/atom/currentUserData';
+import { useEffect } from 'react';
 
 const Home = () => {
   const [user] = useRecoilState(currentUserState);
@@ -68,6 +69,10 @@ const Home = () => {
     offset = e.target.innerText * 10 - 10;
     refetch();
   };
+
+  useEffect(() => {
+    refetch();
+  }, [user]);
 
   return (
     <Layout>
