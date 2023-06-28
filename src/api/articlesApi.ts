@@ -18,7 +18,13 @@ export const articleApi = {
     const response = Axios.get(`/articles/${slug}`);
     return response;
   },
-  update: () => {},
+  update: (
+    slug: string,
+    articleData: INewArticleRequest,
+  ): Promise<AxiosResponse<ISingleArticleResponse>> => {
+    const response = Axios.put(`/articles/${slug}`, articleData);
+    return response;
+  },
   delete: (slug: string) => {
     const response = Axios.delete(`/articles/${slug}`);
     return response;
