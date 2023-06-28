@@ -88,7 +88,7 @@ const Profile = () => {
           className={`page-item ${currentPage === i ? 'active' : ''}`}
           onClick={onClickPageButton}
         >
-          <a className="page-link ng-binding">{i}</a>
+          <a className="page-link">{i}</a>
         </li>,
       );
     }
@@ -128,7 +128,6 @@ const Profile = () => {
                     <a
                       ui-sref="app.settings"
                       className="btn btn-sm btn-outline-secondary action-btn"
-                      ng-show="$ctrl.isUser"
                       href="#/settings"
                     >
                       <i className="ion-gear-a"></i> Edit Profile Settings
@@ -158,16 +157,9 @@ const Profile = () => {
 
               {isMyArticles &&
                 (myTabIsLoading ? (
-                  <div className="article-preview ng-hide" ng-hide="!$ctrl.loading">
-                    Loading articles...
-                  </div>
+                  <div className="article-preview">Loading articles...</div>
                 ) : !myArticlesData?.articlesCount ? (
-                  <div
-                    className="article-preview"
-                    ng-show="!$ctrl.loading &amp;&amp; !$ctrl.list.length"
-                  >
-                    No articles are here... yet.
-                  </div>
+                  <div className="article-preview">No articles are here... yet.</div>
                 ) : (
                   <>
                     {myArticlesData!.articles.map((articleData, index) => (
@@ -213,16 +205,9 @@ const Profile = () => {
 
               {!isMyArticles &&
                 (favoritedTabIsLoading ? (
-                  <div className="article-preview ng-hide" ng-hide="!$ctrl.loading">
-                    Loading articles...
-                  </div>
+                  <div className="article-preview">Loading articles...</div>
                 ) : !favoritedArticlesData?.articlesCount ? (
-                  <div
-                    className="article-preview"
-                    ng-show="!$ctrl.loading &amp;&amp; !$ctrl.list.length"
-                  >
-                    No articles are here... yet.
-                  </div>
+                  <div className="article-preview">No articles are here... yet.</div>
                 ) : (
                   <>
                     {favoritedArticlesData!.articles.map((articleData, index) => (

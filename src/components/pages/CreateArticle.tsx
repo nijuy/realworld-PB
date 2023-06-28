@@ -85,7 +85,7 @@ const CreateArticle = () => {
           <div className="row">
             <div className="col-md-10 offset-md-1 col-xs-12">
               {postStatusData && !postStatusData.postStatus && (
-                <ul className="error-messages" ng-show="$ctrl.errors">
+                <ul className="error-messages">
                   <ErrorPrint errors={postStatusData.errors} />
                 </ul>
               )}
@@ -137,16 +137,8 @@ const CreateArticle = () => {
                     <div className="tag-list">
                       {tagList &&
                         tagList.map((tagData, index) => (
-                          <span
-                            key={index}
-                            ng-repeat="tag in $ctrl.article.tagList"
-                            className="tag-default tag-pill ng-binding ng-scope"
-                          >
-                            <i
-                              className="ion-close-round"
-                              ng-click="$ctrl.removeTag(tag)"
-                              onClick={() => removeTag(tagData)}
-                            ></i>
+                          <span key={index} className="tag-default tag-pill">
+                            <i className="ion-close-round" onClick={() => removeTag(tagData)}></i>
                             {tagData}
                           </span>
                         ))}

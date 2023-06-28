@@ -124,7 +124,7 @@ const Article = () => {
                 </>
               ) : (
                 <>
-                  <span ng-show="$ctrl.canModify" className="ng-scope">
+                  <span className="ng-scope">
                     <a
                       className="btn btn-outline-secondary btn-sm"
                       ui-sref="app.editor({ slug: $ctrl.article.slug })"
@@ -133,12 +133,7 @@ const Article = () => {
                       <i className="ion-edit"></i> Edit Article
                     </a>
                     &nbsp;&nbsp;
-                    <button
-                      className="btn btn-outline-danger btn-sm"
-                      ng-class="{disabled: $ctrl.isDeleting}"
-                      ng-click="$ctrl.deleteArticle()"
-                      onClick={deleteArticle}
-                    >
+                    <button className="btn btn-outline-danger btn-sm" onClick={deleteArticle}>
                       <i className="ion-trash-a"></i> Delete Article
                     </button>
                   </span>
@@ -154,7 +149,7 @@ const Article = () => {
               <p>{articleData?.body}</p>
               <ul className="tag-list">
                 {articleData?.tagList.map((tagData, index) => (
-                  <li key={index} className="tag-default tag-pill tag-outline ng-binding ng-scope">
+                  <li key={index} className="tag-default tag-pill tag-outline">
                     {tagData}
                   </li>
                 ))}
@@ -192,7 +187,7 @@ const Article = () => {
                 </>
               ) : (
                 <>
-                  <span ng-show="$ctrl.canModify" className="ng-scope">
+                  <span className="ng-scope">
                     <a
                       className="btn btn-outline-secondary btn-sm"
                       ui-sref="app.editor({ slug: $ctrl.article.slug })"
@@ -201,12 +196,7 @@ const Article = () => {
                       <i className="ion-edit"></i> Edit Article
                     </a>
                     &nbsp;&nbsp;
-                    <button
-                      className="btn btn-outline-danger btn-sm"
-                      ng-class="{disabled: $ctrl.isDeleting}"
-                      ng-click="$ctrl.deleteArticle()"
-                      onClick={deleteArticle}
-                    >
+                    <button className="btn btn-outline-danger btn-sm" onClick={deleteArticle}>
                       <i className="ion-trash-a"></i> Delete Article
                     </button>
                   </span>
@@ -264,10 +254,9 @@ const Article = () => {
                       </span>
                       {!user.user.token ||
                         (user.user.username === articleData?.author.username && (
-                          <span className="mod-options" ng-show="$ctrl.canModify">
+                          <span className="mod-options">
                             <i
                               className="ion-trash-a"
-                              ng-click="$ctrl.deleteCb()"
                               onClick={() => {
                                 deleteComment(commentData.id);
                               }}

@@ -46,15 +46,8 @@ const Home = () => {
 
     for (let i = 1; i <= buttonCount; i++) {
       buttonList.push(
-        <li
-          key={i}
-          className="page-item ng-scope"
-          ng-class="{active: pageNumber === $ctrl.currentPage }"
-          ng-repeat="pageNumber in $ctrl.pageRange($ctrl.totalPages)"
-          ng-click="$ctrl.changePage(pageNumber)"
-          onClick={onClickPageButton}
-        >
-          <a className="page-link ng-binding" href="">
+        <li key={i} className="page-item" onClick={onClickPageButton}>
+          <a className="page-link" href="">
             {i}
           </a>
         </li>,
@@ -129,11 +122,7 @@ const Home = () => {
                       <span>Read more...</span>
                       <ul className="tag-list">
                         {article.tagList.map((tag, index) => (
-                          <li
-                            key={index}
-                            className="tag-default tag-pill tag-outline ng-binding ng-scope"
-                            ng-repeat="tag in $ctrl.article.tagList"
-                          >
+                          <li key={index} className="tag-default tag-pill tag-outline">
                             {tag}
                           </li>
                         ))}
