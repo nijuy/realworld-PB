@@ -24,15 +24,13 @@ const Signin = () => {
   const emailRef = useRef<HTMLInputElement>(null);
   const passwordRef = useRef<HTMLInputElement>(null);
 
-  const onClickSigninData = (buttonEvent: React.MouseEvent<HTMLButtonElement>) => {
-    if (emailRef.current?.checkValidity()) {
-      buttonEvent.preventDefault();
-      const signinData = {
-        email: emailRef.current.value,
-        password: passwordRef.current!.value,
-      };
-      login(signinData);
-    }
+  const onSubmitSigninData = (formEvent: React.MouseEvent<HTMLFormElement>) => {
+    formEvent.preventDefault();
+    const signinData = {
+      email: emailRef.current!.value,
+      password: passwordRef.current!.value,
+    };
+    login(signinData);
   };
 
   const login = async (signinData: ILoginUserData) => {
@@ -78,7 +76,7 @@ const Signin = () => {
                   </ul>
                 )}
 
-                <form>
+                <form onSubmit={onSubmitSigninData}>
                   <fieldset className="form-group">
                     <input
                       className="form-control form-control-lg"
@@ -95,12 +93,7 @@ const Signin = () => {
                       ref={passwordRef}
                     />
                   </fieldset>
-                  <button
-                    className="btn btn-lg btn-primary pull-xs-right"
-                    onClick={onClickSigninData}
-                  >
-                    Sign in
-                  </button>
+                  <button className="btn btn-lg btn-primary pull-xs-right">Sign in</button>
                 </form>
               </div>
             </div>
