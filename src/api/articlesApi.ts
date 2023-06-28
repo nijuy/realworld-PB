@@ -1,5 +1,6 @@
 import { Axios } from './api';
 import { IMultipleArticlesResponse, INewArticleRequest } from '../types/articleApi.type';
+import qs from 'qs';
 
 export const articleApi = {
   create: (articleData: INewArticleRequest) => {
@@ -23,11 +24,10 @@ export const feedApi = {
     author?: string;
     favorited?: string;
   }) => {
-    let url = '/articles?limit=10';
-    if (offset) url += `&offset=${offset}`;
-    if (tag) url += `&tag=${tag}`;
+    const response = Axios.get<IMultipleArticlesResponse>(
+      `/articles?${qs.stringify({ limit: 10, offset, tag, author, favorited })}`,
+    );
 
-    const response = Axios.get<IMultipleArticlesResponse>(url);
     return response;
   },
 };
