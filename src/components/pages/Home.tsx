@@ -4,11 +4,11 @@ import { useQuery } from '@tanstack/react-query';
 import { feedApi } from '../../api/articlesApi';
 import { useRecoilValue } from 'recoil';
 import { currentUserState } from '../../recoil/atom/currentUserData';
-import { useEffect } from 'react';
+import { useState, useEffect } from 'react';
 
 const Home = () => {
   const user = useRecoilValue(currentUserState);
-  let offset = 0;
+  const [offset, setOffset] = useState(0);
 
   const { isLoading: tagIsLoading, data: tagData } = useQuery({
     queryKey: ['tags'],
@@ -43,10 +43,15 @@ const Home = () => {
   const pageButtonList = () => {
     const buttonCount = feedData.articlesCount / 10 + 1;
     const buttonList: React.ReactNode[] = [];
+    const currentPage = (offset + 10) / 10;
 
     for (let i = 1; i <= buttonCount; i++) {
       buttonList.push(
-        <li key={i} className="page-item" onClick={onClickPageButton}>
+        <li
+          key={i}
+          className={`page-item ${currentPage === i ? 'active' : ''}`}
+          onClick={onClickPageButton}
+        >
           <a className="page-link" href="">
             {i}
           </a>
@@ -59,13 +64,12 @@ const Home = () => {
 
   const onClickPageButton = (e: React.MouseEvent<HTMLAnchorElement>) => {
     e.preventDefault();
-    offset = e.target.innerText * 10 - 10;
-    refetch();
+    setOffset(e.target.innerText * 10 - 10);
   };
 
   useEffect(() => {
     refetch();
-  }, [user]);
+  }, [user, offset]);
 
   return (
     <Layout>
