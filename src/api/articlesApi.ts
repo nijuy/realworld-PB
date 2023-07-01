@@ -29,6 +29,14 @@ export const articleApi = {
     const response = Axios.delete(`/articles/${slug}`);
     return response;
   },
+  favorite: (slug: string) => {
+    const response = Axios.post(`/articles/${slug}/favorite`);
+    return response;
+  },
+  unfavorite: (slug: string) => {
+    const response = Axios.delete(`/articles/${slug}/favorite`);
+    return response;
+  },
 };
 
 export const commentApi = {
