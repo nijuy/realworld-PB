@@ -4,7 +4,13 @@ import { articleApi } from '../api/articlesApi';
 import { getToken } from '../services/TokenService';
 import { useNavigate } from 'react-router-dom';
 
-const FavoriteButton = ({ article }: { article: IArticle }) => {
+const FavoriteButton = ({
+  article,
+  isArticlePage,
+}: {
+  article: IArticle;
+  isArticlePage?: boolean;
+}) => {
   const [favoriteCount, setFavoriteCount] = useState(article.favoritesCount);
   const [favorited, setFavorited] = useState(article.favorited);
 
@@ -34,9 +40,13 @@ const FavoriteButton = ({ article }: { article: IArticle }) => {
     >
       <i className="ion-heart" />
       &nbsp;
-      {favoriteCount}
+      {isArticlePage ? <>Favorite Article ({favoriteCount})</> : <>{favoriteCount}</>}
     </button>
   );
+};
+
+FavoriteButton.defaultProps = {
+  isArticlePage: false,
 };
 
 export default FavoriteButton;
