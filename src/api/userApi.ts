@@ -33,6 +33,12 @@ export const profileApi = {
     const response = Axios.get(`/profiles/${username}`);
     return response;
   },
-  follow: () => {},
-  unfollow: () => {},
+  follow: (username: string) => {
+    const response = Axios.post(`/profiles/${username}/follow`);
+    return response;
+  },
+  unfollow: (username: string) => {
+    const response = Axios.delete(`/profiles/${username}/follow`);
+    return response;
+  },
 };
