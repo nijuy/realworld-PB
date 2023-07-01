@@ -7,11 +7,13 @@ import { currentUserState } from '../../recoil/atom/currentUserData';
 import { useState, useEffect } from 'react';
 import ArticlePreview from '../ArticlePreview';
 
+type FeedType = 'following' | 'global' | 'tag';
+
 const Home = () => {
   const user = useRecoilValue(currentUserState);
 
   const [offset, setOffset] = useState(0);
-  const [isMyArticles, setIsMyArticles] = useState(false);
+  const [currentFeed, setCurrentFeed] = useState<FeedType>('global');
   const [currentTag, setCurrentTag] = useState('');
 
   const { isLoading: tagIsLoading, data: tagData } = useQuery({
@@ -99,8 +101,8 @@ const Home = () => {
     setOffset(e.target.innerText * 10 - 10);
   };
 
-  const onClickTab = () => {
-    setIsMyArticles(!isMyArticles);
+  const onClickTab = (anchorEvent: React.MouseEvent<HTMLAnchorElement>) => {
+    setCurrentFeed(anchorEvent.target.id);
     setOffset(0);
   };
 
@@ -109,7 +111,7 @@ const Home = () => {
   };
 
   useEffect(() => {
-    if (isMyArticles) {
+    if (currentFeed === 'following') {
       myTabRefetch();
     } else {
       globalTabRefetch();
@@ -140,7 +142,8 @@ const Home = () => {
                   {user.user.token && (
                     <li className="nav-item">
                       <a
-                        className={`nav-link${isMyArticles ? ' active' : ''}`}
+                        className={`nav-link${currentFeed === 'following' ? ' active' : ''}`}
+                        id="following"
                         onClick={onClickTab}
                       >
                         Your Feed
@@ -148,14 +151,18 @@ const Home = () => {
                     </li>
                   )}
                   <li className="nav-item">
-                    <a className={`nav-link${!isMyArticles ? ' active' : ''}`} onClick={onClickTab}>
+                    <a
+                      className={`nav-link${currentFeed === 'global' ? ' active' : ''}`}
+                      id="global"
+                      onClick={onClickTab}
+                    >
                       Global Feed
                     </a>
                   </li>
                 </ul>
               </div>
 
-              {!isMyArticles &&
+              {currentFeed === 'global' &&
                 (globalTabIsLoading ? (
                   <div> loading ... </div>
                 ) : (
@@ -171,7 +178,7 @@ const Home = () => {
                   </>
                 ))}
 
-              {isMyArticles &&
+              {currentFeed === 'following' &&
                 (myTabIsLoading ? (
                   <div className="article-preview">Loading articles...</div>
                 ) : !myArticlesData?.articlesCount ? (
