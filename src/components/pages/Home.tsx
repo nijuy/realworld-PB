@@ -12,6 +12,7 @@ const Home = () => {
 
   const [offset, setOffset] = useState(0);
   const [isMyArticles, setIsMyArticles] = useState(false);
+  const [currentTag, setCurrentTag] = useState('');
 
   const { isLoading: tagIsLoading, data: tagData } = useQuery({
     queryKey: ['tags'],
@@ -60,6 +61,20 @@ const Home = () => {
     },
   });
 
+  const { data: tagFeedData, refetch: tagFeedRefetch } = useQuery({
+    queryKey: ['tagArticles'],
+    queryFn: async () => {
+      try {
+        const response = await feedApi.getFeed({ tag: currentTag });
+        console.log(response.data);
+        return response.data;
+      } catch (error) {
+        console.log(error);
+      }
+    },
+    enabled: false,
+  });
+
   const pageButtonList = (articlesCount: number) => {
     const buttonCount = articlesCount / 10 + 1;
     const buttonList: React.ReactNode[] = [];
@@ -89,6 +104,10 @@ const Home = () => {
     setOffset(0);
   };
 
+  const onClickTag = (anchorEvent: React.MouseEvent<HTMLAnchorElement>) => {
+    setCurrentTag(anchorEvent.target.innerText);
+  };
+
   useEffect(() => {
     if (isMyArticles) {
       myTabRefetch();
@@ -96,6 +115,12 @@ const Home = () => {
       globalTabRefetch();
     }
   }, [user, offset]);
+
+  useEffect(() => {
+    if (currentTag !== '') {
+      tagFeedRefetch();
+    }
+  }, [currentTag]);
 
   return (
     <Layout>
@@ -177,7 +202,7 @@ const Home = () => {
                   <div className="tag-list">
                     {tagData!.map((tagData, index) => {
                       return (
-                        <a key={index} href="" className="tag-pill tag-default">
+                        <a key={index} className="tag-pill tag-default" onClick={onClickTag}>
                           {tagData}
                         </a>
                       );
