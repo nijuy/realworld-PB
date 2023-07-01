@@ -1,4 +1,5 @@
 import { IArticle } from '../types/articleApi.type';
+import FavoriteButton from './FavoriteButton';
 
 const ArticlePreview = ({ article }: { article: IArticle }) => {
   const dateOptions = { year: 'numeric', month: 'long', day: 'numeric' };
@@ -17,9 +18,7 @@ const ArticlePreview = ({ article }: { article: IArticle }) => {
             {new Date(article.createdAt).toLocaleDateString('en-US', dateOptions)}
           </span>
         </div>
-        <button className="btn btn-outline-primary btn-sm pull-xs-right">
-          <i className="ion-heart"></i> {article.favoritesCount}
-        </button>
+        <FavoriteButton article={article} />
       </div>
       <a href="" className="preview-link">
         <h1>{article.title}</h1>
