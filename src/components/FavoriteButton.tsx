@@ -35,7 +35,7 @@ const FavoriteButton = ({
 
   return (
     <button
-      className={`btn btn${favorited ? '' : '-outline'}-primary btn-sm pull-xs-right`}
+      className={`btn btn${favorited ? '' : '-outline'}-primary btn-sm`}
       onClick={onClickFavoriteButton}
     >
       <i className="ion-heart" />
