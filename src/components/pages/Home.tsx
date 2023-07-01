@@ -63,12 +63,15 @@ const Home = () => {
     },
   });
 
-  const { data: tagFeedData, refetch: tagFeedRefetch } = useQuery({
+  const {
+    isLoading: tagTabIsLoading,
+    data: tagFeedData,
+    refetch: tagTabRefetch,
+  } = useQuery({
     queryKey: ['tagArticles'],
     queryFn: async () => {
       try {
-        const response = await feedApi.getFeed({ tag: currentTag });
-        console.log(response.data);
+        const response = await feedApi.getFeed({ offset: offset, tag: currentTag });
         return response.data;
       } catch (error) {
         console.log(error);
@@ -103,26 +106,25 @@ const Home = () => {
 
   const onClickTab = (anchorEvent: React.MouseEvent<HTMLAnchorElement>) => {
     setCurrentFeed(anchorEvent.target.id);
+    setCurrentTag('');
     setOffset(0);
   };
 
   const onClickTag = (anchorEvent: React.MouseEvent<HTMLAnchorElement>) => {
+    setCurrentFeed('tag');
     setCurrentTag(anchorEvent.target.innerText);
+    setOffset(0);
   };
 
   useEffect(() => {
     if (currentFeed === 'following') {
       myTabRefetch();
-    } else {
+    } else if (currentFeed === 'global') {
       globalTabRefetch();
+    } else {
+      tagTabRefetch();
     }
-  }, [user, offset]);
-
-  useEffect(() => {
-    if (currentTag !== '') {
-      tagFeedRefetch();
-    }
-  }, [currentTag]);
+  }, [user, currentTag, offset]);
 
   return (
     <Layout>
@@ -159,6 +161,14 @@ const Home = () => {
                       Global Feed
                     </a>
                   </li>
+
+                  {currentTag !== '' && (
+                    <li className="nav-item">
+                      <a className="nav-link active ng-binding">
+                        <i className="ion-pound"></i> {currentTag}
+                      </a>
+                    </li>
+                  )}
                 </ul>
               </div>
 
@@ -193,6 +203,24 @@ const Home = () => {
                         <ul className="pagination">
                           {pageButtonList(myArticlesData?.articlesCount)}
                         </ul>
+                      </ul>
+                    </nav>
+                  </>
+                ))}
+
+              {currentFeed === 'tag' &&
+                (tagTabIsLoading ? (
+                  <div className="article-preview">Loading articles...</div>
+                ) : !tagFeedData?.articlesCount ? (
+                  <div className="article-preview">No articles are here... yet.</div>
+                ) : (
+                  <>
+                    {tagFeedData?.articles.map((article, index) => (
+                      <ArticlePreview key={index} article={article} />
+                    ))}
+                    <nav>
+                      <ul className="pagination">
+                        <ul className="pagination">{pageButtonList(tagFeedData?.articlesCount)}</ul>
                       </ul>
                     </nav>
                   </>
