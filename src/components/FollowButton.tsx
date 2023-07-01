@@ -1,10 +1,19 @@
 import { useState } from 'react';
 import { profileApi } from '../api/userApi';
+import { getToken } from '../services/TokenService';
+import { useNavigate } from 'react-router-dom';
 
 const FollowButton = ({ username, following }: { username: string; following: boolean }) => {
   const [isFollowing, setIsFollowing] = useState(following);
 
+  const navigate = useNavigate();
+
   const onClickFollowButton = async () => {
+    if (!getToken()) {
+      navigate('/register');
+      return;
+    }
+
     if (isFollowing) {
       setIsFollowing(false);
       await profileApi.unfollow(username);
