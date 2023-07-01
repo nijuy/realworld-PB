@@ -6,6 +6,7 @@ import { articleApi, commentApi } from '../../api/articlesApi';
 import { currentUserState } from '../../recoil/atom/currentUserData';
 import { useRecoilValue } from 'recoil';
 import { INewCommentRequest } from '../../types/articleApi.type';
+import FavoriteButton from '../FavoriteButton';
 
 const Article = () => {
   const user = useRecoilValue(currentUserState);
@@ -116,11 +117,7 @@ const Article = () => {
                     &nbsp; Follow {articleData?.author.username} <span className="counter"></span>
                   </button>
                   &nbsp;&nbsp;
-                  <button className="btn btn-sm btn-outline-primary">
-                    <i className="ion-heart"></i>
-                    &nbsp; Favorite Article
-                    <span className="counter">({articleData?.favoritesCount})</span>
-                  </button>
+                  {articleData && <FavoriteButton article={articleData} isArticlePage={true} />}
                 </>
               ) : (
                 <>
