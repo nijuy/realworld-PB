@@ -153,6 +153,9 @@ const Home = () => {
                         className={`nav-link${currentFeed === 'following' ? ' active' : ''}`}
                         id="following"
                         onClick={onClickTab}
+                        style={{
+                          cursor: 'pointer',
+                        }}
                       >
                         Your Feed
                       </a>
@@ -163,6 +166,9 @@ const Home = () => {
                       className={`nav-link${currentFeed === 'global' ? ' active' : ''}`}
                       id="global"
                       onClick={onClickTab}
+                      style={{
+                        cursor: 'pointer',
+                      }}
                     >
                       Global Feed
                     </a>
@@ -170,7 +176,12 @@ const Home = () => {
 
                   {currentTag !== '' && (
                     <li className="nav-item">
-                      <a className="nav-link active ng-binding">
+                      <a
+                        className="nav-link active ng-binding"
+                        style={{
+                          cursor: 'pointer',
+                        }}
+                      >
                         <i className="ion-pound"></i> {currentTag}
                       </a>
                     </li>
@@ -252,7 +263,14 @@ const Home = () => {
                   <div className="tag-list">
                     {tagData!.map((tagData, index) => {
                       return (
-                        <a key={index} className="tag-pill tag-default" onClick={onClickTag}>
+                        <a
+                          key={index}
+                          className="tag-pill tag-default"
+                          onClick={onClickTag}
+                          style={{
+                            cursor: 'pointer',
+                          }}
+                        >
                           {tagData}
                         </a>
                       );
