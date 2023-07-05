@@ -69,7 +69,10 @@ export const feedApi = {
     const response = Axios.get<IMultipleArticlesResponse>(
       `/articles?${qs.stringify({ limit: 10, offset, tag, author, favorited })}`,
     );
-
+    return response;
+  },
+  getFollowingFeed: (offset: number): Promise<AxiosResponse<IMultipleArticlesResponse>> => {
+    const response = Axios.get(`/articles/feed?${qs.stringify({ limit: 10, offset })}`);
     return response;
   },
 };

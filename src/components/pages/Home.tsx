@@ -4,11 +4,17 @@ import { useQuery } from '@tanstack/react-query';
 import { feedApi } from '../../api/articlesApi';
 import { useRecoilValue } from 'recoil';
 import { currentUserState } from '../../recoil/atom/currentUserData';
-import { useEffect } from 'react';
+import { useState, useEffect } from 'react';
+import ArticlePreview from '../ArticlePreview';
+
+type FeedType = 'following' | 'global' | 'tag';
 
 const Home = () => {
   const user = useRecoilValue(currentUserState);
-  let offset = 0;
+
+  const [offset, setOffset] = useState(0);
+  const [currentFeed, setCurrentFeed] = useState<FeedType>('global');
+  const [currentTag, setCurrentTag] = useState('');
 
   const { isLoading: tagIsLoading, data: tagData } = useQuery({
     queryKey: ['tags'],
@@ -20,15 +26,14 @@ const Home = () => {
         console.log(error);
       }
     },
-    staleTime: Infinity,
   });
 
   const {
-    isLoading: feedIsLoading,
-    refetch,
-    data: feedData,
+    isLoading: globalTabIsLoading,
+    refetch: globalTabRefetch,
+    data: globalArticlesData,
   } = useQuery({
-    queryKey: ['feed'],
+    queryKey: ['globalArticles'],
     queryFn: async () => {
       try {
         const response = await feedApi.getFeed({ offset: offset });
@@ -40,16 +45,54 @@ const Home = () => {
     staleTime: 60000,
   });
 
-  const pageButtonList = () => {
-    const buttonCount = feedData.articlesCount / 10 + 1;
+  const {
+    isLoading: myTabIsLoading,
+    data: myArticlesData,
+    refetch: myTabRefetch,
+  } = useQuery({
+    queryKey: ['myArticles'],
+    queryFn: async () => {
+      try {
+        if (user.user.username !== undefined) {
+          const response = await feedApi.getFollowingFeed(offset);
+          return response.data;
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    },
+  });
+
+  const {
+    isLoading: tagTabIsLoading,
+    data: tagFeedData,
+    refetch: tagTabRefetch,
+  } = useQuery({
+    queryKey: ['tagArticles'],
+    queryFn: async () => {
+      try {
+        const response = await feedApi.getFeed({ offset: offset, tag: currentTag });
+        return response.data;
+      } catch (error) {
+        console.log(error);
+      }
+    },
+    enabled: false,
+  });
+
+  const pageButtonList = (articlesCount: number) => {
+    const buttonCount = articlesCount / 10 + 1;
     const buttonList: React.ReactNode[] = [];
+    const currentPage = (offset + 10) / 10;
 
     for (let i = 1; i <= buttonCount; i++) {
       buttonList.push(
-        <li key={i} className="page-item" onClick={onClickPageButton}>
-          <a className="page-link" href="">
-            {i}
-          </a>
+        <li
+          key={i}
+          className={`page-item ${currentPage === i ? 'active' : ''}`}
+          onClick={onClickPageButton}
+        >
+          <a className="page-link">{i}</a>
         </li>,
       );
     }
@@ -57,15 +100,31 @@ const Home = () => {
     return buttonList;
   };
 
-  const onClickPageButton = (e: React.MouseEvent<HTMLAnchorElement>) => {
-    e.preventDefault();
-    offset = e.target.innerText * 10 - 10;
-    refetch();
+  const onClickPageButton = (e: React.MouseEvent<HTMLLIElement>) => {
+    setOffset(e.target.innerText * 10 - 10);
+  };
+
+  const onClickTab = (anchorEvent: React.MouseEvent<HTMLAnchorElement>) => {
+    setCurrentFeed(anchorEvent.target.id);
+    setCurrentTag('');
+    setOffset(0);
+  };
+
+  const onClickTag = (anchorEvent: React.MouseEvent<HTMLAnchorElement>) => {
+    setCurrentFeed('tag');
+    setCurrentTag(anchorEvent.target.innerText);
+    setOffset(0);
   };
 
   useEffect(() => {
-    refetch();
-  }, [user]);
+    if (currentFeed === 'following') {
+      myTabRefetch();
+    } else if (currentFeed === 'global') {
+      globalTabRefetch();
+    } else {
+      tagTabRefetch();
+    }
+  }, [user, currentTag, offset]);
 
   return (
     <Layout>
@@ -84,53 +143,88 @@ const Home = () => {
                 <ul className="nav nav-pills outline-active">
                   {user.user.token && (
                     <li className="nav-item">
-                      <a className="nav-link disabled" href="">
+                      <a
+                        className={`nav-link${currentFeed === 'following' ? ' active' : ''}`}
+                        id="following"
+                        onClick={onClickTab}
+                      >
                         Your Feed
                       </a>
                     </li>
                   )}
                   <li className="nav-item">
-                    <a className="nav-link active" href="">
+                    <a
+                      className={`nav-link${currentFeed === 'global' ? ' active' : ''}`}
+                      id="global"
+                      onClick={onClickTab}
+                    >
                       Global Feed
                     </a>
                   </li>
+
+                  {currentTag !== '' && (
+                    <li className="nav-item">
+                      <a className="nav-link active ng-binding">
+                        <i className="ion-pound"></i> {currentTag}
+                      </a>
+                    </li>
+                  )}
                 </ul>
               </div>
 
-              {feedIsLoading ? (
-                <div> loading ... </div>
-              ) : (
-                feedData?.articles.map((article, index) => (
-                  <div key={index} className="article-preview">
-                    <div className="article-meta">
-                      <a href="profile.html">
-                        <img src={article.author.image} />
-                      </a>
-                      <div className="info">
-                        <a href="" className="author">
-                          {article.author.username}
-                        </a>
-                        <span className="date">January 20th</span>
-                      </div>
-                      <button className="btn btn-outline-primary btn-sm pull-xs-right">
-                        <i className="ion-heart"></i> {article.favoritesCount}
-                      </button>
-                    </div>
-                    <a href="" className="preview-link">
-                      <h1>{article.title}</h1>
-                      <p>{article.description}</p>
-                      <span>Read more...</span>
-                      <ul className="tag-list">
-                        {article.tagList.map((tag, index) => (
-                          <li key={index} className="tag-default tag-pill tag-outline">
-                            {tag}
-                          </li>
-                        ))}
+              {currentFeed === 'global' &&
+                (globalTabIsLoading ? (
+                  <div> loading ... </div>
+                ) : (
+                  <>
+                    {globalArticlesData?.articles.map((article, index) => (
+                      <ArticlePreview key={index} article={article} />
+                    ))}
+                    <nav>
+                      <ul className="pagination">
+                        {pageButtonList(globalArticlesData?.articlesCount as number)}
                       </ul>
-                    </a>
-                  </div>
-                ))
-              )}
+                    </nav>
+                  </>
+                ))}
+
+              {currentFeed === 'following' &&
+                (myTabIsLoading ? (
+                  <div className="article-preview">Loading articles...</div>
+                ) : !myArticlesData?.articlesCount ? (
+                  <div className="article-preview">No articles are here... yet.</div>
+                ) : (
+                  <>
+                    {myArticlesData?.articles.map((article, index) => (
+                      <ArticlePreview key={index} article={article} />
+                    ))}
+                    <nav>
+                      <ul className="pagination">
+                        <ul className="pagination">
+                          {pageButtonList(myArticlesData?.articlesCount)}
+                        </ul>
+                      </ul>
+                    </nav>
+                  </>
+                ))}
+
+              {currentFeed === 'tag' &&
+                (tagTabIsLoading ? (
+                  <div className="article-preview">Loading articles...</div>
+                ) : !tagFeedData?.articlesCount ? (
+                  <div className="article-preview">No articles are here... yet.</div>
+                ) : (
+                  <>
+                    {tagFeedData?.articles.map((article, index) => (
+                      <ArticlePreview key={index} article={article} />
+                    ))}
+                    <nav>
+                      <ul className="pagination">
+                        <ul className="pagination">{pageButtonList(tagFeedData?.articlesCount)}</ul>
+                      </ul>
+                    </nav>
+                  </>
+                ))}
             </div>
 
             <div className="col-md-3">
@@ -143,7 +237,7 @@ const Home = () => {
                   <div className="tag-list">
                     {tagData!.map((tagData, index) => {
                       return (
-                        <a key={index} href="" className="tag-pill tag-default">
+                        <a key={index} className="tag-pill tag-default" onClick={onClickTag}>
                           {tagData}
                         </a>
                       );
@@ -152,12 +246,6 @@ const Home = () => {
                 )}
               </div>
             </div>
-
-            {!feedIsLoading && (
-              <nav>
-                <ul className="pagination">{pageButtonList()}</ul>
-              </nav>
-            )}
           </div>
         </div>
       </div>
