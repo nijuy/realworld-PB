@@ -7,6 +7,7 @@ import { currentUserState } from '../../recoil/atom/currentUserData';
 import { useRecoilValue } from 'recoil';
 import { INewCommentRequest } from '../../types/articleApi.type';
 import FavoriteButton from '../FavoriteButton';
+import FollowButton from '../FollowButton';
 
 const Article = () => {
   const user = useRecoilValue(currentUserState);
@@ -112,10 +113,10 @@ const Article = () => {
               </div>
               {user.user.username !== articleData?.author.username ? (
                 <>
-                  <button className="btn btn-sm btn-outline-secondary">
-                    <i className="ion-plus-round"></i>
-                    &nbsp; Follow {articleData?.author.username} <span className="counter"></span>
-                  </button>
+                  <FollowButton
+                    username={articleData.author.username}
+                    following={articleData.author.following}
+                  />
                   &nbsp;&nbsp;
                   {articleData && <FavoriteButton article={articleData} isArticlePage={true} />}
                 </>
@@ -171,10 +172,10 @@ const Article = () => {
               </div>
               {user.user.username !== articleData?.author.username ? (
                 <>
-                  <button className="btn btn-sm btn-outline-secondary">
-                    <i className="ion-plus-round"></i>
-                    &nbsp; Follow {articleData?.author.username} <span className="counter"></span>
-                  </button>
+                  <FollowButton
+                    username={articleData.author.username}
+                    following={articleData.author.following}
+                  />
                   &nbsp;&nbsp;
                   <button className="btn btn-sm btn-outline-primary">
                     <i className="ion-heart"></i>
