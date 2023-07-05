@@ -106,8 +106,8 @@ const Home = () => {
     return buttonList;
   };
 
-  const onClickPageButton = (e: React.MouseEvent<HTMLLIElement>) => {
-    setOffset(e.target.innerText * 10 - 10);
+  const onClickPageButton = (buttonEvent: React.MouseEvent<HTMLLIElement>) => {
+    setOffset(buttonEvent.target.innerText * 10 - 10);
   };
 
   const onClickTab = (anchorEvent: React.MouseEvent<HTMLAnchorElement>) => {
