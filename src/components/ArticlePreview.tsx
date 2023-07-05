@@ -11,7 +11,7 @@ const ArticlePreview = ({ article }: { article: IArticle }) => {
           <img src={article.author.image} />
         </a>
         <div className="info">
-          <a href="" className="author">
+          <a href={`/#/profile/${article.author.username}`} className="author">
             {article.author.username}
           </a>
           <span className="date">

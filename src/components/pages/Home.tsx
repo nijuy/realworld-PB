@@ -84,7 +84,11 @@ const Home = () => {
   });
 
   const pageButtonList = (articlesCount: number) => {
-    const buttonCount = articlesCount / 10 + 1;
+    if (articlesCount <= 10) {
+      return;
+    }
+
+    const buttonCount = articlesCount % 10 ? articlesCount / 10 + 1 : articlesCount / 10;
     const buttonList: React.ReactNode[] = [];
     const currentPage = (offset + 10) / 10;
 
@@ -94,17 +98,19 @@ const Home = () => {
           key={i}
           className={`page-item ${currentPage === i ? 'active' : ''}`}
           onClick={onClickPageButton}
+          style={{
+            cursor: 'pointer',
+          }}
         >
           <a className="page-link">{i}</a>
         </li>,
       );
     }
-
     return buttonList;
   };
 
-  const onClickPageButton = (e: React.MouseEvent<HTMLLIElement>) => {
-    setOffset(e.target.innerText * 10 - 10);
+  const onClickPageButton = (buttonEvent: React.MouseEvent<HTMLLIElement>) => {
+    setOffset(buttonEvent.target.innerText * 10 - 10);
   };
 
   const onClickTab = (anchorEvent: React.MouseEvent<HTMLAnchorElement>) => {
@@ -150,6 +156,9 @@ const Home = () => {
                         className={`nav-link${currentFeed === 'following' ? ' active' : ''}`}
                         id="following"
                         onClick={onClickTab}
+                        style={{
+                          cursor: 'pointer',
+                        }}
                       >
                         Your Feed
                       </a>
@@ -160,6 +169,9 @@ const Home = () => {
                       className={`nav-link${currentFeed === 'global' ? ' active' : ''}`}
                       id="global"
                       onClick={onClickTab}
+                      style={{
+                        cursor: 'pointer',
+                      }}
                     >
                       Global Feed
                     </a>
@@ -167,7 +179,12 @@ const Home = () => {
 
                   {currentTag !== '' && (
                     <li className="nav-item">
-                      <a className="nav-link active ng-binding">
+                      <a
+                        className="nav-link active ng-binding"
+                        style={{
+                          cursor: 'pointer',
+                        }}
+                      >
                         <i className="ion-pound"></i> {currentTag}
                       </a>
                     </li>
@@ -177,7 +194,7 @@ const Home = () => {
 
               {currentFeed === 'global' &&
                 (globalTabIsLoading ? (
-                  <div> loading ... </div>
+                  <div className="article-preview">Loading articles...</div>
                 ) : (
                   <>
                     {globalArticlesData?.articles.map((article, index) => (
@@ -244,12 +261,19 @@ const Home = () => {
                 <p>Popular Tags</p>
 
                 {tagIsLoading ? (
-                  <div> loading ... </div>
+                  <div className="article-preview">Loading tags...</div>
                 ) : (
                   <div className="tag-list">
                     {tagData!.map((tagData, index) => {
                       return (
-                        <a key={index} className="tag-pill tag-default" onClick={onClickTag}>
+                        <a
+                          key={index}
+                          className="tag-pill tag-default"
+                          onClick={onClickTag}
+                          style={{
+                            cursor: 'pointer',
+                          }}
+                        >
                           {tagData}
                         </a>
                       );
