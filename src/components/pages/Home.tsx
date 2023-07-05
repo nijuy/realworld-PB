@@ -180,7 +180,7 @@ const Home = () => {
 
               {currentFeed === 'global' &&
                 (globalTabIsLoading ? (
-                  <div> loading ... </div>
+                  <div className="article-preview">Loading articles...</div>
                 ) : (
                   <>
                     {globalArticlesData?.articles.map((article, index) => (
@@ -247,7 +247,7 @@ const Home = () => {
                 <p>Popular Tags</p>
 
                 {tagIsLoading ? (
-                  <div> loading ... </div>
+                  <div className="article-preview">Loading tags...</div>
                 ) : (
                   <div className="tag-list">
                     {tagData!.map((tagData, index) => {
