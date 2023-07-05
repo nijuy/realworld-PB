@@ -41,8 +41,8 @@ const Header = () => {
                     <i className="ion-gear-a"></i>&nbsp;Settings
                   </a>
                 </li>
-                <li className="nav-item" onClick={logout}>
-                  <a className="nav-link" href="">
+                <li className="nav-item">
+                  <a className="nav-link" href={`#/profile/${user.user.username}`}>
                     <img className="user-pic" src={user.user.image} ng-src={user.user.image} />
                     &nbsp;{user.user.username}
                   </a>
