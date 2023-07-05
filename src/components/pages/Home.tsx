@@ -30,6 +30,7 @@ const Home = () => {
 
   const {
     isLoading: globalTabIsLoading,
+    isRefetching: globalTabIsRefetching,
     refetch: globalTabRefetch,
     data: globalArticlesData,
   } = useQuery({
@@ -47,6 +48,7 @@ const Home = () => {
 
   const {
     isLoading: myTabIsLoading,
+    isRefetching: myTabIsRefetching,
     data: myArticlesData,
     refetch: myTabRefetch,
   } = useQuery({
@@ -65,6 +67,7 @@ const Home = () => {
 
   const {
     isLoading: tagTabIsLoading,
+    isRefetching: tagTabIsRefetching,
     data: tagFeedData,
     refetch: tagTabRefetch,
   } = useQuery({
@@ -180,6 +183,9 @@ const Home = () => {
                     {globalArticlesData?.articles.map((article, index) => (
                       <ArticlePreview key={index} article={article} />
                     ))}
+                    {globalTabIsRefetching && (
+                      <div className="article-preview">Loading articles...</div>
+                    )}
                     <nav>
                       <ul className="pagination">
                         {pageButtonList(globalArticlesData?.articlesCount as number)}
@@ -198,6 +204,9 @@ const Home = () => {
                     {myArticlesData?.articles.map((article, index) => (
                       <ArticlePreview key={index} article={article} />
                     ))}
+                    {myTabIsRefetching && (
+                      <div className="article-preview">Loading articles...</div>
+                    )}
                     <nav>
                       <ul className="pagination">
                         <ul className="pagination">
@@ -218,6 +227,9 @@ const Home = () => {
                     {tagFeedData?.articles.map((article, index) => (
                       <ArticlePreview key={index} article={article} />
                     ))}
+                    {tagTabIsRefetching && (
+                      <div className="article-preview">Loading articles...</div>
+                    )}
                     <nav>
                       <ul className="pagination">
                         <ul className="pagination">{pageButtonList(tagFeedData?.articlesCount)}</ul>
