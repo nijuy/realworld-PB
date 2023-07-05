@@ -177,11 +177,7 @@ const Article = () => {
                     following={articleData.author.following}
                   />
                   &nbsp;&nbsp;
-                  <button className="btn btn-sm btn-outline-primary">
-                    <i className="ion-heart"></i>
-                    &nbsp; Favorite Article
-                    <span className="counter">({articleData?.favoritesCount})</span>
-                  </button>
+                  <FavoriteButton article={articleData} isArticlePage={true} />
                 </>
               ) : (
                 <>
