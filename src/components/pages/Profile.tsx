@@ -8,6 +8,7 @@ import { useRecoilValue } from 'recoil';
 import { useQuery } from '@tanstack/react-query';
 import { feedApi } from '../../api/articlesApi';
 import ArticlePreview from '../ArticlePreview';
+import FollowButton from '../FollowButton';
 
 const Profile = () => {
   const user = useRecoilValue(currentUserState);
@@ -128,10 +129,10 @@ const Profile = () => {
                   <h4>{profileData.username}</h4>
                   <p>{profileData.bio}</p>
                   {user.user.username !== profileData.username ? (
-                    <button className="btn btn-sm btn-outline-secondary action-btn">
-                      <i className="ion-plus-round"></i>
-                      &nbsp; Follow {profileData.username}
-                    </button>
+                    <FollowButton
+                      username={profileData.username}
+                      following={profileData.following}
+                    />
                   ) : (
                     <a
                       ui-sref="app.settings"
