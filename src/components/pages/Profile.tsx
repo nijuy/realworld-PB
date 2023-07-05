@@ -7,6 +7,8 @@ import { currentUserState } from '../../recoil/atom/currentUserData';
 import { useRecoilValue } from 'recoil';
 import { useQuery } from '@tanstack/react-query';
 import { feedApi } from '../../api/articlesApi';
+import ArticlePreview from '../ArticlePreview';
+import FollowButton from '../FollowButton';
 
 const Profile = () => {
   const user = useRecoilValue(currentUserState);
@@ -18,10 +20,9 @@ const Profile = () => {
   const [profileData, setProfileData] = useState<IProfile>();
   const [isMyArticles, setIsMyArticles] = useState(true);
 
-  const dateOptions = { year: 'numeric', month: 'long', day: 'numeric' };
-
   const {
     isLoading: myTabIsLoading,
+    isRefetching: myTabIsRefetching,
     data: myArticlesData,
     refetch: myTabRefetch,
   } = useQuery({
@@ -40,6 +41,7 @@ const Profile = () => {
 
   const {
     isLoading: favoritedTabIsLoading,
+    isRefetching: favoritedTabIsRefetching,
     data: favoritedArticlesData,
     refetch: favoritedTabRefecth,
   } = useQuery({
@@ -77,7 +79,11 @@ const Profile = () => {
   };
 
   const pageButtonList = (articlesCount: number) => {
-    const buttonCount = articlesCount / 10 + 1;
+    if (articlesCount <= 10) {
+      return;
+    }
+
+    const buttonCount = articlesCount % 10 ? articlesCount / 10 + 1 : articlesCount / 10;
     const buttonList: React.ReactNode[] = [];
     const currentPage = (offset + 10) / 10;
 
@@ -87,6 +93,9 @@ const Profile = () => {
           key={i}
           className={`page-item ${currentPage === i ? 'active' : ''}`}
           onClick={onClickPageButton}
+          style={{
+            cursor: 'pointer',
+          }}
         >
           <a className="page-link">{i}</a>
         </li>,
@@ -120,10 +129,10 @@ const Profile = () => {
                   <h4>{profileData.username}</h4>
                   <p>{profileData.bio}</p>
                   {user.user.username !== profileData.username ? (
-                    <button className="btn btn-sm btn-outline-secondary action-btn">
-                      <i className="ion-plus-round"></i>
-                      &nbsp; Follow {profileData.username}
-                    </button>
+                    <FollowButton
+                      username={profileData.username}
+                      following={profileData.following}
+                    />
                   ) : (
                     <a
                       ui-sref="app.settings"
@@ -145,10 +154,22 @@ const Profile = () => {
               <div className="articles-toggle">
                 <ul className="nav nav-pills outline-active">
                   <li className="nav-item" onClick={onClickTab}>
-                    <a className={`nav-link${isMyArticles ? ' active' : ''}`}>My Articles</a>
+                    <a
+                      className={`nav-link${isMyArticles ? ' active' : ''}`}
+                      style={{
+                        cursor: 'pointer',
+                      }}
+                    >
+                      My Articles
+                    </a>
                   </li>
                   <li className="nav-item" onClick={onClickTab}>
-                    <a className={`nav-link${!isMyArticles ? ' active' : ''}`}>
+                    <a
+                      className={`nav-link${!isMyArticles ? ' active' : ''}`}
+                      style={{
+                        cursor: 'pointer',
+                      }}
+                    >
                       Favorited Articles
                     </a>
                   </li>
@@ -163,40 +184,11 @@ const Profile = () => {
                 ) : (
                   <>
                     {myArticlesData!.articles.map((articleData, index) => (
-                      <div className="article-preview" key={index}>
-                        <div className="article-meta">
-                          <a href={`/profile/${articleData.author.username}`}>
-                            <img src={articleData.author.image} />
-                          </a>
-                          <div className="info">
-                            <a href={`/profile/${articleData.author.username}`} className="author">
-                              {articleData.author.username}
-                            </a>
-                            <span className="date">
-                              {new Date(articleData.createdAt).toLocaleDateString(
-                                'en-US',
-                                dateOptions,
-                              )}
-                            </span>
-                          </div>
-                          <button className="btn btn-outline-primary btn-sm pull-xs-right">
-                            <i className="ion-heart"></i> {articleData.favoritesCount}
-                          </button>
-                        </div>
-                        <a href={`/article/${articleData.slug}`} className="preview-link">
-                          <h1>{articleData.title}</h1>
-                          <p>{articleData.description}</p>
-                          <span>Read more...</span>
-                          <ul className="tag-list">
-                            {articleData.tagList.map((tagData, tagIndex) => (
-                              <li className="tag-default tag-pill tag-outline" key={tagIndex}>
-                                {tagData}
-                              </li>
-                            ))}
-                          </ul>
-                        </a>
-                      </div>
+                      <ArticlePreview key={index} article={articleData} />
                     ))}
+                    {myTabIsRefetching && (
+                      <div className="article-preview">Loading articles...</div>
+                    )}
                     <nav>
                       <ul className="pagination">{pageButtonList(myArticlesData.articlesCount)}</ul>
                     </nav>
@@ -211,40 +203,11 @@ const Profile = () => {
                 ) : (
                   <>
                     {favoritedArticlesData!.articles.map((articleData, index) => (
-                      <div className="article-preview" key={index}>
-                        <div className="article-meta">
-                          <a href={`/profile/${articleData.author.username}`}>
-                            <img src={articleData.author.image} />
-                          </a>
-                          <div className="info">
-                            <a href={`/profile/${articleData.author.username}`} className="author">
-                              {articleData.author.username}
-                            </a>
-                            <span className="date">
-                              {new Date(articleData.createdAt).toLocaleDateString(
-                                'en-US',
-                                dateOptions,
-                              )}
-                            </span>
-                          </div>
-                          <button className="btn btn-outline-primary btn-sm pull-xs-right">
-                            <i className="ion-heart"></i> {articleData.favoritesCount}
-                          </button>
-                        </div>
-                        <a href={`/article/${articleData.slug}`} className="preview-link">
-                          <h1>{articleData.title}</h1>
-                          <p>{articleData.description}</p>
-                          <span>Read more...</span>
-                          <ul className="tag-list">
-                            {articleData.tagList.map((tagData, tagIndex) => (
-                              <li className="tag-default tag-pill tag-outline" key={tagIndex}>
-                                {tagData}
-                              </li>
-                            ))}
-                          </ul>
-                        </a>
-                      </div>
+                      <ArticlePreview key={index} article={articleData} />
                     ))}
+                    {favoritedTabIsRefetching && (
+                      <div className="article-preview">Loading articles...</div>
+                    )}
                     <nav>
                       <ul className="pagination">
                         {pageButtonList(favoritedArticlesData.articlesCount)}
