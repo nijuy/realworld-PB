@@ -92,6 +92,9 @@ const Profile = () => {
           key={i}
           className={`page-item ${currentPage === i ? 'active' : ''}`}
           onClick={onClickPageButton}
+          style={{
+            cursor: 'pointer',
+          }}
         >
           <a className="page-link">{i}</a>
         </li>,
@@ -150,10 +153,22 @@ const Profile = () => {
               <div className="articles-toggle">
                 <ul className="nav nav-pills outline-active">
                   <li className="nav-item" onClick={onClickTab}>
-                    <a className={`nav-link${isMyArticles ? ' active' : ''}`}>My Articles</a>
+                    <a
+                      className={`nav-link${isMyArticles ? ' active' : ''}`}
+                      style={{
+                        cursor: 'pointer',
+                      }}
+                    >
+                      My Articles
+                    </a>
                   </li>
                   <li className="nav-item" onClick={onClickTab}>
-                    <a className={`nav-link${!isMyArticles ? ' active' : ''}`}>
+                    <a
+                      className={`nav-link${!isMyArticles ? ' active' : ''}`}
+                      style={{
+                        cursor: 'pointer',
+                      }}
+                    >
                       Favorited Articles
                     </a>
                   </li>
