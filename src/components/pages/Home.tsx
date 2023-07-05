@@ -84,7 +84,11 @@ const Home = () => {
   });
 
   const pageButtonList = (articlesCount: number) => {
-    const buttonCount = articlesCount / 10 + 1;
+    if (articlesCount <= 10) {
+      return;
+    }
+
+    const buttonCount = articlesCount % 10 ? articlesCount / 10 + 1 : articlesCount / 10;
     const buttonList: React.ReactNode[] = [];
     const currentPage = (offset + 10) / 10;
 
@@ -99,7 +103,6 @@ const Home = () => {
         </li>,
       );
     }
-
     return buttonList;
   };
 
