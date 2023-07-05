@@ -98,6 +98,9 @@ const Home = () => {
           key={i}
           className={`page-item ${currentPage === i ? 'active' : ''}`}
           onClick={onClickPageButton}
+          style={{
+            cursor: 'pointer',
+          }}
         >
           <a className="page-link">{i}</a>
         </li>,
