@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { IArticle } from '../types/articleApi.type';
 import { articleApi } from '../api/articlesApi';
-import { getToken } from '../services/TokenService';
+import { getToken } from '../services/tokenService';
 import { useNavigate } from 'react-router-dom';
 
 const FavoriteButton = ({
@@ -42,7 +42,13 @@ const FavoriteButton = ({
     >
       <i className="ion-heart" />
       &nbsp;
-      {isArticlePage ? <>Favorite Article ({favoriteCount})</> : <>{favoriteCount}</>}
+      {isArticlePage ? (
+        <>
+          {favorited ? 'Unf' : 'F'}avorite Article ({favoriteCount})
+        </>
+      ) : (
+        <>{favoriteCount}</>
+      )}
     </button>
   );
 };

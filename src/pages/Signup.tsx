@@ -1,15 +1,15 @@
 import { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useRecoilState } from 'recoil';
-import { currentUserState } from '../../recoil/atom/currentUserData';
-import { IJoinUserData } from '../../types/userApi.type';
+import { currentUserState } from '../recoil/atom/currentUserData';
+import { IJoinUserData } from '../types/userApi.type';
 import { AxiosError } from 'axios';
-import { IError } from '../../types/error.type';
-import Layout from '../layout/Layout';
-import { userApi } from '../../api/userApi';
-import ErrorPrint from '../ErrorPrint';
-import { getToken, setToken } from '../../services/TokenService';
-import { updateHeader } from '../../api/api';
+import { IError } from '../types/error.type';
+import Layout from '../components/layout/Layout';
+import { userApi } from '../api/userApi';
+import ErrorPrint from '../components/ErrorPrint';
+import { getToken, setToken } from '../services/tokenService';
+import { updateHeader } from '../api/api';
 
 interface ISignupError extends IError {
   signupStatus: boolean;

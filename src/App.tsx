@@ -1,13 +1,12 @@
-import './App.css';
 import { HashRouter, Routes, Route } from 'react-router-dom';
-import Home from './components/pages/Home';
-import Article from './components/pages/Article';
-import CreateArticle from './components/pages/CreateArticle';
-import EditArticle from './components/pages/EditArticle';
-import Profile from './components/pages/Profile';
-import Settings from './components/pages/Settings';
-import Signup from './components/pages/Signup';
-import Signin from './components/pages/Signin';
+import Home from './pages/Home';
+import Article from './pages/Article';
+import CreateArticle from './pages/CreateArticle';
+import EditArticle from './pages/EditArticle';
+import Profile from './pages/Profile';
+import Settings from './pages/Settings';
+import Signup from './pages/Signup';
+import Signin from './pages/Signin';
 
 function App() {
   return (

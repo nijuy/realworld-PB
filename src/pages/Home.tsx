@@ -1,11 +1,11 @@
-import Layout from '../layout/Layout';
-import tagApi from '../../api/tagApi';
+import Layout from '../components/layout/Layout';
+import tagApi from '../api/tagApi';
 import { useQuery } from '@tanstack/react-query';
-import { feedApi } from '../../api/articlesApi';
+import { feedApi } from '../api/articlesApi';
 import { useRecoilValue } from 'recoil';
-import { currentUserState } from '../../recoil/atom/currentUserData';
+import { currentUserState } from '../recoil/atom/currentUserData';
 import { useState, useEffect } from 'react';
-import ArticlePreview from '../ArticlePreview';
+import ArticlePreview from '../components/ArticlePreview';
 
 type FeedType = 'following' | 'global' | 'tag';
 

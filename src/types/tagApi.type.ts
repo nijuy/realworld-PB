@@ -1,6 +1,6 @@
 /**
  * @CRUD get
- * @ACTION tagData
+ * @ACTION getTags
  */
 export interface ITagData {
   tags: string[];

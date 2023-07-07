@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { getToken } from '../services/TokenService';
+import { getToken } from '../services/tokenService';
 
 const BASE_URL = 'https://api.realworld.io/api/';
 const token = getToken();

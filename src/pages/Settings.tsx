@@ -1,12 +1,12 @@
-import Layout from '../layout/Layout';
+import Layout from '../components/layout/Layout';
 import { useRecoilState } from 'recoil';
-import { currentUserState } from '../../recoil/atom/currentUserData';
+import { currentUserState } from '../recoil/atom/currentUserData';
 import { useNavigate } from 'react-router-dom';
 import { useEffect, useRef } from 'react';
-import { userApi } from '../../api/userApi';
-import { IEditUserData } from '../../types/userApi.type';
-import { getToken, removeItemToken, setToken } from '../../services/TokenService';
-import { updateHeader } from '../../api/api';
+import { userApi } from '../api/userApi';
+import { IEditUserData } from '../types/userApi.type';
+import { getToken, removeItemToken, setToken } from '../services/tokenService';
+import { updateHeader } from '../api/api';
 
 const Settings = () => {
   const [user, setUser] = useRecoilState(currentUserState);

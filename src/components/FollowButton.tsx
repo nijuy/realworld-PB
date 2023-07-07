@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { profileApi } from '../api/userApi';
-import { getToken } from '../services/TokenService';
+import { getToken } from '../services/tokenService';
 import { useNavigate } from 'react-router-dom';
 
 const FollowButton = ({ username, following }: { username: string; following: boolean }) => {
