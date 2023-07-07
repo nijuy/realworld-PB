@@ -42,7 +42,13 @@ const FavoriteButton = ({
     >
       <i className="ion-heart" />
       &nbsp;
-      {isArticlePage ? <>Favorite Article ({favoriteCount})</> : <>{favoriteCount}</>}
+      {isArticlePage ? (
+        <>
+          {favorited ? 'Unf' : 'F'}avorite Article ({favoriteCount})
+        </>
+      ) : (
+        <>{favoriteCount}</>
+      )}
     </button>
   );
 };
