@@ -251,7 +251,7 @@ const Article = () => {
                         {new Date(commentData.createdAt).toLocaleDateString('en-US', dateOptions)}
                       </span>
                       {!user.user.token ||
-                        (user.user.username === articleData.author.username && (
+                        (user.user.username === commentData.author.username && (
                           <span className="mod-options">
                             <i
                               className="ion-trash-a"
