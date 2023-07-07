@@ -1,13 +1,13 @@
-import Layout from '../layout/Layout';
+import Layout from '../components/layout/Layout';
 import { useRef } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
-import { articleApi, commentApi } from '../../api/articlesApi';
-import { currentUserState } from '../../recoil/atom/currentUserData';
+import { articleApi, commentApi } from '../api/articlesApi';
+import { currentUserState } from '../recoil/atom/currentUserData';
 import { useRecoilValue } from 'recoil';
-import { INewCommentRequest } from '../../types/articleApi.type';
-import FavoriteButton from '../FavoriteButton';
-import FollowButton from '../FollowButton';
+import { INewCommentRequest } from '../types/articleApi.type';
+import FavoriteButton from '../components/FavoriteButton';
+import FollowButton from '../components/FollowButton';
 
 const Article = () => {
   const user = useRecoilValue(currentUserState);

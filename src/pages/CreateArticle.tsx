@@ -1,55 +1,65 @@
-import { useNavigate, useParams } from 'react-router-dom';
-import Layout from '../layout/Layout';
-import { useEffect, useState, useRef } from 'react';
-import { articleApi } from '../../api/articlesApi';
-import { ISingleArticleResponse } from '../../types/articleApi.type';
+import { useEffect, useRef, useState } from 'react';
+import Layout from '../components/layout/Layout';
+import { getToken } from '../services/tokenService';
+import { useNavigate } from 'react-router-dom';
+import { INewArticleRequest } from '../types/articleApi.type';
+import { articleApi } from '../api/articlesApi';
 import { AxiosError } from 'axios';
-import { IError } from '../../types/error.type';
-import ErrorPrint from '../ErrorPrint';
+import { IError } from '../types/error.type';
+import ErrorPrint from '../components/ErrorPrint';
 
 interface IPostError extends IError {
   postStatus: boolean;
 }
 
-const EditArticle = () => {
-  const slug = useParams().URLSlug;
-
-  const [article, setArticle] = useState<ISingleArticleResponse>();
-  const [tagList, setTagList] = useState<string[]>();
-  const [postStatusData, setPostStatusData] = useState<IPostError>();
+const CreateArticle = () => {
+  const navigate = useNavigate();
 
   const titleRef = useRef<HTMLInputElement>(null);
   const descriptionRef = useRef<HTMLInputElement>(null);
   const bodyRef = useRef<HTMLTextAreaElement>(null);
   const tagRef = useRef<HTMLInputElement>(null);
 
-  const navigate = useNavigate();
+  const [tagList, setTagList] = useState<string[]>([]);
+  const [postStatusData, setPostStatusData] = useState<IPostError>();
 
-  const getArticle = async () => {
-    try {
-      if (slug !== undefined) {
-        const response = await articleApi.read(slug);
-        setArticle(response.data);
-        setTagList(response.data.article.tagList);
-      }
-    } catch (error) {
-      console.log(error);
+  const addTag = () => {
+    const newTag = tagRef.current?.value || '';
+
+    if (newTag === '') {
+      alert('태그를 입력해주세요');
+      return;
     }
+
+    if (tagList.includes(newTag)) {
+      alert('이미 추가된 태그입니다');
+      return;
+    }
+
+    setTagList((prevState) => [...prevState!, newTag]);
+    tagRef.current!.value = '';
   };
 
-  const updateArticle = async (formEvent: React.FormEvent<HTMLFormElement>) => {
-    formEvent.preventDefault();
+  const removeTag = (removedTag: string) => {
+    setTagList((prevState) => prevState.filter((tag) => tag !== removedTag));
+  };
+
+  const onSubmitArticle = () => {
+    const articleData = {
+      article: {
+        title: titleRef.current!.value,
+        description: descriptionRef.current!.value,
+        body: bodyRef.current!.value,
+        tagList: tagList,
+      },
+    };
+    createArticle(articleData);
+  };
+
+  const createArticle = async (articleData: INewArticleRequest) => {
     try {
-      if (slug !== undefined) {
-        const articleData = {
-          title: titleRef.current!.value || (article?.article.title as string),
-          description: descriptionRef.current!.value || (article?.article.description as string),
-          body: bodyRef.current!.value || (article?.article.body as string),
-          tagList: tagList || [],
-        };
-        const response = await articleApi.update(slug, { article: articleData });
-        navigate(`/article/${response.data.article.slug}`);
-      }
+      const response = await articleApi.create(articleData);
+      navigate(`/article/${response.data.article.slug}`);
     } catch (error) {
       const postError = error as AxiosError;
       if (postError.response !== undefined && postError.response.data !== null) {
@@ -62,30 +72,11 @@ const EditArticle = () => {
     }
   };
 
-  const addTag = () => {
-    const newTag = tagRef.current?.value || '';
-
-    if (newTag === '') {
-      alert('태그를 입력해주세요');
-      return;
-    }
-
-    if (tagList!.includes(newTag)) {
-      alert('이미 추가된 태그입니다');
-      return;
-    }
-
-    setTagList((prevState) => [...prevState!, newTag]);
-    tagRef.current!.value = '';
-  };
-
-  const removeTag = (removedTag: string) => {
-    setTagList((prevState) => prevState!.filter((tag) => tag !== removedTag));
-  };
-
   useEffect(() => {
-    getArticle();
-  }, [slug]);
+    if (getToken() === null) {
+      navigate('/');
+    }
+  }, []);
 
   return (
     <Layout>
@@ -98,7 +89,7 @@ const EditArticle = () => {
                   <ErrorPrint errors={postStatusData.errors} />
                 </ul>
               )}
-              <form onSubmit={updateArticle}>
+              <form>
                 <fieldset>
                   <fieldset className="form-group">
                     <input
@@ -106,7 +97,6 @@ const EditArticle = () => {
                       className="form-control form-control-lg"
                       placeholder="Article Title"
                       ref={titleRef}
-                      defaultValue={article?.article.title}
                     />
                   </fieldset>
                   <fieldset className="form-group">
@@ -115,7 +105,6 @@ const EditArticle = () => {
                       className="form-control"
                       placeholder="What's this article about?"
                       ref={descriptionRef}
-                      defaultValue={article?.article.description}
                     />
                   </fieldset>
                   <fieldset className="form-group">
@@ -124,7 +113,6 @@ const EditArticle = () => {
                       rows={8}
                       placeholder="Write your article (in markdown)"
                       ref={bodyRef}
-                      defaultValue={article?.article.body}
                     ></textarea>
                   </fieldset>
                   <fieldset className="form-group">
@@ -150,18 +138,17 @@ const EditArticle = () => {
                       {tagList &&
                         tagList.map((tagData, index) => (
                           <span key={index} className="tag-default tag-pill">
-                            <i
-                              className="ion-close-round"
-                              onClick={() => {
-                                removeTag(tagData);
-                              }}
-                            ></i>
+                            <i className="ion-close-round" onClick={() => removeTag(tagData)}></i>
                             {tagData}
                           </span>
                         ))}
                     </div>
                   </fieldset>
-                  <button className="btn btn-lg pull-xs-right btn-primary" type="submit">
+                  <button
+                    className="btn btn-lg pull-xs-right btn-primary"
+                    type="button"
+                    onClick={onSubmitArticle}
+                  >
                     Publish Article
                   </button>
                 </fieldset>
@@ -174,4 +161,4 @@ const EditArticle = () => {
   );
 };
 
-export default EditArticle;
+export default CreateArticle;

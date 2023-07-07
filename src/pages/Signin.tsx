@@ -1,15 +1,15 @@
 import { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { userApi } from '../../api/userApi';
-import { ILoginUserData } from '../../types/userApi.type';
+import { userApi } from '../api/userApi';
+import { ILoginUserData } from '../types/userApi.type';
 import { AxiosError } from 'axios';
-import { IError } from '../../types/error.type';
-import ErrorPrint from '../ErrorPrint';
-import Layout from '../layout/Layout';
+import { IError } from '../types/error.type';
+import ErrorPrint from '../components/ErrorPrint';
+import Layout from '../components/layout/Layout';
 import { useRecoilState } from 'recoil';
-import { currentUserState } from '../../recoil/atom/currentUserData';
-import { getToken, setToken } from '../../services/TokenService';
-import { updateHeader } from '../../api/api';
+import { currentUserState } from '../recoil/atom/currentUserData';
+import { getToken, setToken } from '../services/tokenService';
+import { updateHeader } from '../api/api';
 
 interface ISigninError extends IError {
   signinStatus: boolean;

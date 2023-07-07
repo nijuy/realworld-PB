@@ -1,14 +1,14 @@
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import Layout from '../layout/Layout';
-import { profileApi } from '../../api/userApi';
-import { IProfile } from '../../types/userApi.type';
-import { currentUserState } from '../../recoil/atom/currentUserData';
+import Layout from '../components/layout/Layout';
+import { profileApi } from '../api/userApi';
+import { IProfile } from '../types/userApi.type';
+import { currentUserState } from '../recoil/atom/currentUserData';
 import { useRecoilValue } from 'recoil';
 import { useQuery } from '@tanstack/react-query';
-import { feedApi } from '../../api/articlesApi';
-import ArticlePreview from '../ArticlePreview';
-import FollowButton from '../FollowButton';
+import { feedApi } from '../api/articlesApi';
+import ArticlePreview from '../components/ArticlePreview';
+import FollowButton from '../components/FollowButton';
 
 const Profile = () => {
   const user = useRecoilValue(currentUserState);

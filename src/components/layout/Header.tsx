@@ -1,6 +1,6 @@
 import { useRecoilState } from 'recoil';
 import { currentUserState } from '../../recoil/atom/currentUserData';
-import { removeItemToken } from '../../services/TokenService';
+import { removeItemToken } from '../../services/tokenService';
 
 const Header = () => {
   const [user, setUser] = useRecoilState(currentUserState);
