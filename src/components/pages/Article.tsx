@@ -105,11 +105,11 @@ const Article = () => {
               <h1>{articleData.title}</h1>
 
               <div className="article-meta">
-                <a href="">
+                <a href={`/#/profile/${articleData?.author.username}`}>
                   <img src={articleData.author.image} />
                 </a>
                 <div className="info">
-                  <a href="" className="author">
+                  <a href={`/#/profile/${articleData?.author.username}`} className="author">
                     {articleData?.author.username}
                   </a>
                   <span className="date">
@@ -240,11 +240,17 @@ const Article = () => {
                       <p className="card-text">{commentData.body}</p>
                     </div>
                     <div className="card-footer">
-                      <a href="" className="comment-author">
+                      <a
+                        href={`#/profile/${commentData.author.username}`}
+                        className="comment-author"
+                      >
                         <img src={commentData.author.image} className="comment-author-img" />
                       </a>
                       &nbsp;&nbsp;
-                      <a href="" className="comment-author">
+                      <a
+                        href={`#/profile/${commentData.author.username}`}
+                        className="comment-author"
+                      >
                         {commentData.author.username}
                       </a>
                       <span className="date-posted">
