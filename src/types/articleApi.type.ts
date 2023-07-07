@@ -1,6 +1,6 @@
 /**
  * @CRUD post
- * @ACTION createArticle
+ * @ACTION postArticle
  */
 export interface INewArticleRequest {
   article: {
@@ -13,7 +13,7 @@ export interface INewArticleRequest {
 
 /**
  * @CRUD get
- * @Action getArticleData
+ * @ACTION getArticle
  */
 export interface ISingleArticleResponse {
   article: IArticle;
@@ -38,8 +38,8 @@ export interface IArticle {
 }
 
 /**
- * @CRUD get
- *
+ * @CRUD post
+ * @ACTION postComment
  */
 export interface INewCommentRequest {
   comment: {
@@ -60,13 +60,17 @@ export interface IComment {
   };
 }
 
+/**
+ * @CRUD get
+ * @ACTION getComments
+ */
 export interface IMultipleCommentsResponse {
   comments: IComment[];
 }
 
 /**
  * @CRUD get
- * @Action getFeedData
+ * @Action getFeed
  */
 export interface IMultipleArticlesResponse {
   articles: IArticle[];

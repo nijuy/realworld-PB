@@ -31,23 +31,18 @@ export interface IEditUserData {
 
 /**
  * @CRUD get
- * @ACTION globalData
+ * @ACTION getCurrentUser
  */
 export interface IGlobalUserData {
   user: { username: string; email: string; token: string; bio: string; image: string };
 }
 
 /**
- * @CRUD
- * @ACTION
+ * @CRUD get
+ * @ACTION getProfile
  */
 export interface IProfileResponse {
-  profile: {
-    username: string;
-    bio: string;
-    image: string;
-    following: boolean;
-  };
+  profile: IProfile;
 }
 
 export interface IProfile {
