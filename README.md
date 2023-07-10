@@ -1,20 +1,51 @@
-# realworld
-2023 yourssu realworld 프로젝트 C조 리포지토리입니다. 
+<h1>YourSSU-RealWorld-PB</h1>
 
-### 팀원
-| [Bori (@nijuy)](https://github.com/nijuy) | [Poly (@indianaPoly)](https://github.com/indianaPoly) |
-| :---: | :---: |
-| <img src="https://avatars.githubusercontent.com/u/87255462?v=4" width="150"/> | <img src="https://avatars.githubusercontent.com/u/95522176?v=4" width="150"/> 
+![realworld-dual-mode](https://github.com/nijuy/realworld-PB/assets/87255462/76ba3852-f551-4dc7-94da-1527a0b7b25c)
 
-### 규칙
-#### 개발 규칙
-1. 작업은 `DEV-(기능명)` 브랜치 에서 작업
-2. interface 및 타입 지정은 컴포넌트 외부에서 지정
+<h2> 👀 프로젝트 소개 </h2>
 
-#### 명명 규칙
-0. `파일명`은 대문자, `변수명`은 소문자로 시작 + 카멜 케이스
-1. `prop type` : 앞 글자 대문자 + 컴포넌트명 + Prop
-2. `state` : 컴포넌트 이름 + Data
-3. `핸들러 함수` : on + 핸들러 명 + 컴포넌트이름 + Data (이벤트 핸들러는 외부에서 지정후 사용)
-4. `이벤트` : tag + Event (formEvent, buttonEvent, ... ⭕ / e ❌)
-5. `map 함수 매개변수` : 배열이름 + Data
+숭실대학교 중앙동아리 유어슈, 웹 프론트엔드팀
+
+[RealWorld](https://github.com/gothinkster/realworld) 클론 코딩 & 페어 프로그래밍 프로젝트
+
+프로젝트 기간: 2023.05.20~2023.07.07
+
+<h4> 😎 팀원 </h4>
+
+| [Bori (@nijuy)](https://github.com/nijuy)                  | [Poly (@indianaPoly)](https://github.com/indianaPoly)      |
+| ---------------------------------------------------------- | ---------------------------------------------------------- |
+|<img src="https://avatars.githubusercontent.com/u/87255462?v=4"/> | <img src="https://avatars.githubusercontent.com/u/95522176?v=4"/> |
+
+<h2> 🛠 기술 스택 </h2>
+
+`TypeScript` `Vite` `React` `react-router-dom` `axios` `recoil` `recoil-persist` `react-query` `qs`
+<h2> 📁 폴더 구조 </h2>
+
+```
+📦src
+ ┣ 📂api // api 호출 함수
+ ┣ 📂components // 여러 페이지에서 사용하는 컴포넌트
+ ┃ ┣ 📂layout // Header, Footer 등 화면 구조의 뼈대
+ ┣ 📂pages // 페이지
+ ┣ 📂recoil
+ ┃ ┗ 📂atom // recoil atom 정의
+ ┣ 📂services // 서비스 함수 (토큰)
+ ┣ 📂types // 타입 정의
+ ┣ 📜App.tsx // Routing
+ ┣ 📜main.tsx
+ ┗ 📜vite-env.d.ts
+```
+<h2> ✨ 실행 </h2>
+<h4> Installation </h4>
+
+```
+$ git clone https://github.com/nijuy/realworld-PB.git
+$ cd realworld-PB
+```
+<h4> Frontend </h4>
+
+```
+$ npm install --global yarn
+$ yarn install
+$ yarn run dev
+```
