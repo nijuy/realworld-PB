@@ -6,6 +6,7 @@ import { useRecoilValue } from 'recoil';
 import { currentUserState } from '../recoil/atom/currentUserData';
 import { useState, useEffect } from 'react';
 import ArticlePreview from '../components/ArticlePreview';
+import Loading from '../components/Loading';
 
 type FeedType = 'following' | 'global' | 'tag';
 
@@ -194,15 +195,13 @@ const Home = () => {
 
               {currentFeed === 'global' &&
                 (globalTabIsLoading ? (
-                  <div className="article-preview">Loading articles...</div>
+                  <Loading textValue="articles" />
                 ) : (
                   <>
                     {globalArticlesData?.articles.map((article, index) => (
                       <ArticlePreview key={index} article={article} />
                     ))}
-                    {globalTabIsRefetching && (
-                      <div className="article-preview">Loading articles...</div>
-                    )}
+                    {globalTabIsRefetching && <Loading textValue="articles" />}
                     <nav>
                       <ul className="pagination">
                         {pageButtonList(globalArticlesData?.articlesCount as number)}
@@ -213,7 +212,7 @@ const Home = () => {
 
               {currentFeed === 'following' &&
                 (myTabIsLoading ? (
-                  <div className="article-preview">Loading articles...</div>
+                  <Loading textValue="articles" />
                 ) : !myArticlesData?.articlesCount ? (
                   <div className="article-preview">No articles are here... yet.</div>
                 ) : (
@@ -221,9 +220,7 @@ const Home = () => {
                     {myArticlesData?.articles.map((article, index) => (
                       <ArticlePreview key={index} article={article} />
                     ))}
-                    {myTabIsRefetching && (
-                      <div className="article-preview">Loading articles...</div>
-                    )}
+                    {myTabIsRefetching && <Loading textValue="articles" />}
                     <nav>
                       <ul className="pagination">
                         <ul className="pagination">
@@ -236,7 +233,7 @@ const Home = () => {
 
               {currentFeed === 'tag' &&
                 (tagTabIsLoading ? (
-                  <div className="article-preview">Loading articles...</div>
+                  <Loading textValue="articles" />
                 ) : !tagFeedData?.articlesCount ? (
                   <div className="article-preview">No articles are here... yet.</div>
                 ) : (
@@ -244,9 +241,7 @@ const Home = () => {
                     {tagFeedData?.articles.map((article, index) => (
                       <ArticlePreview key={index} article={article} />
                     ))}
-                    {tagTabIsRefetching && (
-                      <div className="article-preview">Loading articles...</div>
-                    )}
+                    {tagTabIsRefetching && <Loading textValue="articles" />}
                     <nav>
                       <ul className="pagination">
                         <ul className="pagination">{pageButtonList(tagFeedData?.articlesCount)}</ul>
@@ -261,7 +256,7 @@ const Home = () => {
                 <p>Popular Tags</p>
 
                 {tagIsLoading ? (
-                  <div className="article-preview">Loading tags...</div>
+                  <Loading textValue="tags" />
                 ) : (
                   <div className="tag-list">
                     {tagData!.map((tagData, index) => {
