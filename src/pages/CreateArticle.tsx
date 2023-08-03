@@ -5,12 +5,8 @@ import { useNavigate } from 'react-router-dom';
 import { INewArticleRequest } from '../types/articleApi.type';
 import { articleApi } from '../api/articlesApi';
 import { AxiosError } from 'axios';
-import { IError } from '../types/error.type';
+import { IError, IPostError } from '../types/error.type';
 import ErrorPrint from '../components/ErrorPrint';
-
-interface IPostError extends IError {
-  postStatus: boolean;
-}
 
 const CreateArticle = () => {
   const navigate = useNavigate();
