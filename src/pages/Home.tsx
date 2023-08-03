@@ -72,7 +72,7 @@ const Home = () => {
     data: tagFeedData,
     refetch: tagTabRefetch,
   } = useQuery({
-    queryKey: ['tagArticles'],
+    queryKey: ['tagArticles', currentTag],
     queryFn: async () => {
       try {
         const response = await feedApi.getFeed({ offset: offset, tag: currentTag });
