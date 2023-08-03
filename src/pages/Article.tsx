@@ -21,7 +21,7 @@ const Article = () => {
   const commentRef = useRef<HTMLTextAreaElement>(null);
 
   const { data: articleData, isSuccess: articleIsSuccess } = useQuery({
-    queryKey: ['article'],
+    queryKey: ['article', slug],
     queryFn: async () => {
       try {
         if (slug !== undefined) {
@@ -39,7 +39,7 @@ const Article = () => {
     refetch,
     isSuccess: commentIsSuccess,
   } = useQuery({
-    queryKey: ['comment'],
+    queryKey: ['comment', slug],
     queryFn: async () => {
       try {
         if (slug !== undefined) {

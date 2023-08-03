@@ -24,12 +24,12 @@ const FavoriteButton = ({
 
     if (favorited) {
       setFavoriteCount(favoriteCount - 1);
-      setFavorited(false);
       await articleApi.unfavorite(article.slug);
+      setFavorited(false);
     } else {
       setFavoriteCount(favoriteCount + 1);
-      setFavorited(true);
       await articleApi.favorite(article.slug);
+      setFavorited(true);
     }
   };
 

@@ -9,6 +9,7 @@ import { useQuery } from '@tanstack/react-query';
 import { feedApi } from '../api/articlesApi';
 import ArticlePreview from '../components/ArticlePreview';
 import FollowButton from '../components/FollowButton';
+import Loading from '../components/Loading';
 
 const Profile = () => {
   const user = useRecoilValue(currentUserState);
@@ -178,7 +179,7 @@ const Profile = () => {
 
               {isMyArticles &&
                 (myTabIsLoading ? (
-                  <div className="article-preview">Loading articles...</div>
+                  <Loading textValue="articles" />
                 ) : !myArticlesData?.articlesCount ? (
                   <div className="article-preview">No articles are here... yet.</div>
                 ) : (
@@ -186,9 +187,7 @@ const Profile = () => {
                     {myArticlesData!.articles.map((articleData, index) => (
                       <ArticlePreview key={index} article={articleData} />
                     ))}
-                    {myTabIsRefetching && (
-                      <div className="article-preview">Loading articles...</div>
-                    )}
+                    {myTabIsRefetching && <Loading textValue="articles" />}
                     <nav>
                       <ul className="pagination">{pageButtonList(myArticlesData.articlesCount)}</ul>
                     </nav>
@@ -197,7 +196,7 @@ const Profile = () => {
 
               {!isMyArticles &&
                 (favoritedTabIsLoading ? (
-                  <div className="article-preview">Loading articles...</div>
+                  <Loading textValue="articles" />
                 ) : !favoritedArticlesData?.articlesCount ? (
                   <div className="article-preview">No articles are here... yet.</div>
                 ) : (
@@ -205,9 +204,7 @@ const Profile = () => {
                     {favoritedArticlesData!.articles.map((articleData, index) => (
                       <ArticlePreview key={index} article={articleData} />
                     ))}
-                    {favoritedTabIsRefetching && (
-                      <div className="article-preview">Loading articles...</div>
-                    )}
+                    {favoritedTabIsRefetching && <Loading textValue="articles" />}
                     <nav>
                       <ul className="pagination">
                         {pageButtonList(favoritedArticlesData.articlesCount)}

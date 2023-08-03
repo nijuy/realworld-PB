@@ -4,16 +4,12 @@ import { useRecoilState } from 'recoil';
 import { currentUserState } from '../recoil/atom/currentUserData';
 import { IJoinUserData } from '../types/userApi.type';
 import { AxiosError } from 'axios';
-import { IError } from '../types/error.type';
+import { IError, ISignupError } from '../types/error.type';
 import Layout from '../components/layout/Layout';
 import { userApi } from '../api/userApi';
 import ErrorPrint from '../components/ErrorPrint';
 import { getToken, setToken } from '../services/tokenService';
 import { updateHeader } from '../api/api';
-
-interface ISignupError extends IError {
-  signupStatus: boolean;
-}
 
 const Signup = () => {
   const [_, setUser] = useRecoilState(currentUserState);
