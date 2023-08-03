@@ -39,7 +39,7 @@ const Article = () => {
     refetch,
     isSuccess: commentIsSuccess,
   } = useQuery({
-    queryKey: ['comment'],
+    queryKey: ['comment', slug],
     queryFn: async () => {
       try {
         if (slug !== undefined) {
