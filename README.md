@@ -1,6 +1,8 @@
 <h1>YourSSU-RealWorld-PB</h1>
 
-![realworld-dual-mode](https://github.com/nijuy/realworld-PB/assets/87255462/76ba3852-f551-4dc7-94da-1527a0b7b25c)
+<div align="center">
+ <img src="https://github.com/nijuy/realworld-PB/assets/87255462/eb7f1128-ad9a-480d-bbf3-b4733b472720" >
+</div>
 
 <h2> 👀 프로젝트 소개 </h2>
 
