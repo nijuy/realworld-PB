@@ -50,8 +50,9 @@ const Profile = () => {
     setOffset(0);
   };
 
-  const onClickPageButton = (e: React.MouseEvent<HTMLLIElement>) => {
-    setOffset(e.target.innerText * 10 - 10);
+  const onClickPageButton = (buttonEvent: React.MouseEvent<HTMLLIElement>) => {
+    const pageNumber = Number((buttonEvent.target as HTMLLIElement).innerText);
+    setOffset(pageNumber * 10 - 10);
   };
 
   const pageButtonList = (articlesCount: number) => {

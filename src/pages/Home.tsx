@@ -70,18 +70,18 @@ const Home = () => {
   };
 
   const onClickPageButton = (buttonEvent: React.MouseEvent<HTMLLIElement>) => {
-    setOffset(buttonEvent.target.innerText * 10 - 10);
+    const pageNumber = Number((buttonEvent.target as HTMLLIElement).innerText);
+    setOffset(pageNumber * 10 - 10);
   };
 
   const onClickTab = (anchorEvent: React.MouseEvent<HTMLAnchorElement>) => {
-    setCurrentFeed(anchorEvent.target.id);
-    setCurrentTag('');
+    setCurrentFeed((anchorEvent.target as Element).id as FeedType);
     setOffset(0);
   };
 
   const onClickTag = (anchorEvent: React.MouseEvent<HTMLAnchorElement>) => {
     setCurrentFeed('tag');
-    setCurrentTag(anchorEvent.target.innerText);
+    setCurrentTag((anchorEvent.target as HTMLAnchorElement).innerText);
     setOffset(0);
   };
 
