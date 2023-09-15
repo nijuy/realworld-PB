@@ -5,6 +5,7 @@ import { useNavigate } from 'react-router-dom';
 
 const FollowButton = ({ username, following }: { username: string; following: boolean }) => {
   const [isFollowing, setIsFollowing] = useState(following);
+  const [isDisabled, setIsDisabled] = useState(false);
 
   const navigate = useNavigate();
 
@@ -14,6 +15,8 @@ const FollowButton = ({ username, following }: { username: string; following: bo
       return;
     }
 
+    setIsDisabled(true);
+
     if (isFollowing) {
       setIsFollowing(false);
       await profileApi.unfollow(username);
@@ -21,12 +24,15 @@ const FollowButton = ({ username, following }: { username: string; following: bo
       setIsFollowing(true);
       await profileApi.follow(username);
     }
+
+    setIsDisabled(false);
   };
 
   return (
     <button
       className={`btn btn-sm btn${isFollowing ? '' : '-outline'}-secondary action-btn`}
       onClick={onClickFollowButton}
+      disabled={isDisabled}
     >
       <i className="ion-plus-round"></i>
       &nbsp; {isFollowing ? 'Unfollow' : 'Follow'} {username}
