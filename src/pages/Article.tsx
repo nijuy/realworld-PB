@@ -16,7 +16,7 @@ const Article = () => {
 
   const navigate = useNavigate();
 
-  const dateOptions = { year: 'numeric', month: 'long', day: 'numeric' };
+  const dateOptions = { year: 'numeric', month: 'long', day: 'numeric' } as const;
 
   const commentRef = useRef<HTMLTextAreaElement>(null);
 
@@ -70,25 +70,25 @@ const Article = () => {
 
   return (
     <Layout>
-      {articleIsSuccess && commentIsSuccess && (
+      {articleIsSuccess && commentIsSuccess && articleData && (
         <div className="article-page">
           <div className="banner">
             <div className="container">
               <h1>{articleData.title}</h1>
 
               <div className="article-meta">
-                <a href={`/#/profile/${articleData?.author.username}`}>
+                <a href={`/#/profile/${articleData.author.username}`}>
                   <img src={articleData.author.image} />
                 </a>
                 <div className="info">
-                  <a href={`/#/profile/${articleData?.author.username}`} className="author">
-                    {articleData?.author.username}
+                  <a href={`/#/profile/${articleData.author.username}`} className="author">
+                    {articleData.author.username}
                   </a>
                   <span className="date">
                     {new Date(articleData.createdAt).toLocaleDateString('en-US', dateOptions)}
                   </span>
                 </div>
-                {user.user.username !== articleData.author.username ? (
+                {user.user.username !== articleData?.author.username ? (
                   <>
                     <FollowButton
                       username={articleData.author.username}
@@ -147,11 +147,11 @@ const Article = () => {
                     {new Date(articleData.createdAt).toLocaleDateString('en-US', dateOptions)}
                   </span>
                 </div>
-                {user.user.username !== articleData?.author.username ? (
+                {user.user.username !== articleData.author.username ? (
                   <>
                     <FollowButton
-                      username={articleData.author.username}
-                      following={articleData.author.following}
+                      username={articleData?.author.username}
+                      following={articleData?.author.following}
                     />
                     &nbsp;&nbsp;
                     <FavoriteButton article={articleData} isArticlePage={true} />
@@ -206,42 +206,43 @@ const Article = () => {
                   </p>
                 )}
 
-                {commentList.map((commentData, index) => (
-                  <div className="card" key={index}>
-                    <div className="card-block">
-                      <p className="card-text">{commentData.body}</p>
+                {commentList &&
+                  commentList.map((commentData, index) => (
+                    <div className="card" key={index}>
+                      <div className="card-block">
+                        <p className="card-text">{commentData.body}</p>
+                      </div>
+                      <div className="card-footer">
+                        <a
+                          href={`#/profile/${commentData.author.username}`}
+                          className="comment-author"
+                        >
+                          <img src={commentData.author.image} className="comment-author-img" />
+                        </a>
+                        &nbsp;&nbsp;
+                        <a
+                          href={`#/profile/${commentData.author.username}`}
+                          className="comment-author"
+                        >
+                          {commentData.author.username}
+                        </a>
+                        <span className="date-posted">
+                          {new Date(commentData.createdAt).toLocaleDateString('en-US', dateOptions)}
+                        </span>
+                        {!user.user.token ||
+                          (user.user.username === commentData.author.username && (
+                            <span className="mod-options">
+                              <i
+                                className="ion-trash-a"
+                                onClick={() => {
+                                  deleteComment(commentData.id);
+                                }}
+                              ></i>
+                            </span>
+                          ))}
+                      </div>
                     </div>
-                    <div className="card-footer">
-                      <a
-                        href={`#/profile/${commentData.author.username}`}
-                        className="comment-author"
-                      >
-                        <img src={commentData.author.image} className="comment-author-img" />
-                      </a>
-                      &nbsp;&nbsp;
-                      <a
-                        href={`#/profile/${commentData.author.username}`}
-                        className="comment-author"
-                      >
-                        {commentData.author.username}
-                      </a>
-                      <span className="date-posted">
-                        {new Date(commentData.createdAt).toLocaleDateString('en-US', dateOptions)}
-                      </span>
-                      {!user.user.token ||
-                        (user.user.username === commentData.author.username && (
-                          <span className="mod-options">
-                            <i
-                              className="ion-trash-a"
-                              onClick={() => {
-                                deleteComment(commentData.id);
-                              }}
-                            ></i>
-                          </span>
-                        ))}
-                    </div>
-                  </div>
-                ))}
+                  ))}
               </div>
             </div>
           </div>
