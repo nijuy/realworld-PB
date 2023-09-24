@@ -2,7 +2,7 @@ import { IArticle } from '../types/articleApi.type';
 import FavoriteButton from './FavoriteButton';
 
 const ArticlePreview = ({ article }: { article: IArticle }) => {
-  const dateOptions = { year: 'numeric', month: 'long', day: 'numeric' };
+  const dateOptions = { year: 'numeric', month: 'long', day: 'numeric' } as const;
 
   return (
     <div className="article-preview">
