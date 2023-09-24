@@ -13,6 +13,7 @@ const FavoriteButton = ({
 }) => {
   const [favoriteCount, setFavoriteCount] = useState(article.favoritesCount);
   const [favorited, setFavorited] = useState(article.favorited);
+  const [isDisabled, setIsDisabled] = useState(false);
 
   const navigate = useNavigate();
 
@@ -21,6 +22,8 @@ const FavoriteButton = ({
       navigate('/register');
       return;
     }
+
+    setIsDisabled(true);
 
     if (favorited) {
       await articleApi.unfavorite(article.slug);
@@ -31,14 +34,17 @@ const FavoriteButton = ({
       setFavoriteCount(favoriteCount + 1);
       setFavorited(true);
     }
+
+    setIsDisabled(false);
   };
 
   return (
     <button
       className={`btn btn${favorited ? '' : '-outline'}-primary btn-sm ${
         !isArticlePage ? 'pull-xs-right' : ''
-      }`}
+      } `}
       onClick={onClickFavoriteButton}
+      disabled={isDisabled}
     >
       <i className="ion-heart" />
       &nbsp;

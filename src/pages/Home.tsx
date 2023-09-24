@@ -1,12 +1,15 @@
 import Layout from '../components/layout/Layout';
-import tagApi from '../api/tagApi';
-import { useQuery } from '@tanstack/react-query';
-import { feedApi } from '../api/articlesApi';
 import { useRecoilValue } from 'recoil';
 import { currentUserState } from '../recoil/atom/currentUserData';
 import { useState, useEffect } from 'react';
 import ArticlePreview from '../components/ArticlePreview';
 import Loading from '../components/Loading';
+import {
+  useTagsQuery,
+  useGlobalArticlesQuery,
+  useFollowingArticlesQuery,
+  useTagArticlesQuery,
+} from '../hooks/home';
 
 type FeedType = 'following' | 'global' | 'tag';
 
@@ -17,72 +20,28 @@ const Home = () => {
   const [currentFeed, setCurrentFeed] = useState<FeedType>('global');
   const [currentTag, setCurrentTag] = useState('');
 
-  const { isLoading: tagIsLoading, data: tagData } = useQuery({
-    queryKey: ['tags'],
-    queryFn: async () => {
-      try {
-        const response = await tagApi.get();
-        return response.data.tags;
-      } catch (error) {
-        console.log(error);
-      }
-    },
-  });
+  const { isLoading: tagIsLoading, data: tagData } = useTagsQuery();
 
   const {
     isLoading: globalTabIsLoading,
     isRefetching: globalTabIsRefetching,
     refetch: globalTabRefetch,
     data: globalArticlesData,
-  } = useQuery({
-    queryKey: ['globalArticles'],
-    queryFn: async () => {
-      try {
-        const response = await feedApi.getFeed({ offset: offset });
-        return response.data;
-      } catch (error) {
-        console.log(error);
-      }
-    },
-    staleTime: 60000,
-  });
+  } = useGlobalArticlesQuery(offset);
 
   const {
     isLoading: myTabIsLoading,
     isRefetching: myTabIsRefetching,
     data: myArticlesData,
     refetch: myTabRefetch,
-  } = useQuery({
-    queryKey: ['myArticles'],
-    queryFn: async () => {
-      try {
-        if (user.user.username !== undefined) {
-          const response = await feedApi.getFollowingFeed(offset);
-          return response.data;
-        }
-      } catch (error) {
-        console.log(error);
-      }
-    },
-  });
+  } = useFollowingArticlesQuery(user.user.username, offset);
 
   const {
     isLoading: tagTabIsLoading,
     isRefetching: tagTabIsRefetching,
     data: tagFeedData,
     refetch: tagTabRefetch,
-  } = useQuery({
-    queryKey: ['tagArticles', currentTag],
-    queryFn: async () => {
-      try {
-        const response = await feedApi.getFeed({ offset: offset, tag: currentTag });
-        return response.data;
-      } catch (error) {
-        console.log(error);
-      }
-    },
-    enabled: false,
-  });
+  } = useTagArticlesQuery(currentTag, offset);
 
   const pageButtonList = (articlesCount: number) => {
     if (articlesCount <= 10) {
@@ -111,18 +70,18 @@ const Home = () => {
   };
 
   const onClickPageButton = (buttonEvent: React.MouseEvent<HTMLLIElement>) => {
-    setOffset(buttonEvent.target.innerText * 10 - 10);
+    const pageNumber = Number((buttonEvent.target as HTMLLIElement).innerText);
+    setOffset(pageNumber * 10 - 10);
   };
 
   const onClickTab = (anchorEvent: React.MouseEvent<HTMLAnchorElement>) => {
-    setCurrentFeed(anchorEvent.target.id);
-    setCurrentTag('');
+    setCurrentFeed((anchorEvent.target as Element).id as FeedType);
     setOffset(0);
   };
 
   const onClickTag = (anchorEvent: React.MouseEvent<HTMLAnchorElement>) => {
     setCurrentFeed('tag');
-    setCurrentTag(anchorEvent.target.innerText);
+    setCurrentTag((anchorEvent.target as HTMLAnchorElement).innerText);
     setOffset(0);
   };
 
@@ -198,8 +157,8 @@ const Home = () => {
                   <Loading textValue="articles" />
                 ) : (
                   <>
-                    {globalArticlesData?.articles.map((article, index) => (
-                      <ArticlePreview key={index} article={article} />
+                    {globalArticlesData?.articles.map((article) => (
+                      <ArticlePreview key={article.slug} article={article} />
                     ))}
                     {globalTabIsRefetching && <Loading textValue="articles" />}
                     <nav>
@@ -217,8 +176,8 @@ const Home = () => {
                   <div className="article-preview">No articles are here... yet.</div>
                 ) : (
                   <>
-                    {myArticlesData?.articles.map((article, index) => (
-                      <ArticlePreview key={index} article={article} />
+                    {myArticlesData?.articles.map((article) => (
+                      <ArticlePreview key={article.slug} article={article} />
                     ))}
                     {myTabIsRefetching && <Loading textValue="articles" />}
                     <nav>
@@ -238,8 +197,8 @@ const Home = () => {
                   <div className="article-preview">No articles are here... yet.</div>
                 ) : (
                   <>
-                    {tagFeedData?.articles.map((article, index) => (
-                      <ArticlePreview key={index} article={article} />
+                    {tagFeedData?.articles.map((article) => (
+                      <ArticlePreview key={article.slug} article={article} />
                     ))}
                     {tagTabIsRefetching && <Loading textValue="articles" />}
                     <nav>
