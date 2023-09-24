@@ -160,8 +160,8 @@ const Profile = () => {
                   <div className="article-preview">No articles are here... yet.</div>
                 ) : (
                   <>
-                    {myArticlesData!.articles.map((articleData, index) => (
-                      <ArticlePreview key={index} article={articleData} />
+                    {myArticlesData!.articles.map((articleData) => (
+                      <ArticlePreview key={articleData.slug} article={articleData} />
                     ))}
                     {myTabIsRefetching && <Loading textValue="articles" />}
                     <nav>
@@ -177,8 +177,8 @@ const Profile = () => {
                   <div className="article-preview">No articles are here... yet.</div>
                 ) : (
                   <>
-                    {favoritedArticlesData!.articles.map((articleData, index) => (
-                      <ArticlePreview key={index} article={articleData} />
+                    {favoritedArticlesData!.articles.map((articleData) => (
+                      <ArticlePreview key={articleData.slug} article={articleData} />
                     ))}
                     {favoritedTabIsRefetching && <Loading textValue="articles" />}
                     <nav>

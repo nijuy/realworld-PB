@@ -157,8 +157,8 @@ const Home = () => {
                   <Loading textValue="articles" />
                 ) : (
                   <>
-                    {globalArticlesData?.articles.map((article, index) => (
-                      <ArticlePreview key={index} article={article} />
+                    {globalArticlesData?.articles.map((article) => (
+                      <ArticlePreview key={article.slug} article={article} />
                     ))}
                     {globalTabIsRefetching && <Loading textValue="articles" />}
                     <nav>
@@ -176,8 +176,8 @@ const Home = () => {
                   <div className="article-preview">No articles are here... yet.</div>
                 ) : (
                   <>
-                    {myArticlesData?.articles.map((article, index) => (
-                      <ArticlePreview key={index} article={article} />
+                    {myArticlesData?.articles.map((article) => (
+                      <ArticlePreview key={article.slug} article={article} />
                     ))}
                     {myTabIsRefetching && <Loading textValue="articles" />}
                     <nav>
@@ -197,8 +197,8 @@ const Home = () => {
                   <div className="article-preview">No articles are here... yet.</div>
                 ) : (
                   <>
-                    {tagFeedData?.articles.map((article, index) => (
-                      <ArticlePreview key={index} article={article} />
+                    {tagFeedData?.articles.map((article) => (
+                      <ArticlePreview key={article.slug} article={article} />
                     ))}
                     {tagTabIsRefetching && <Loading textValue="articles" />}
                     <nav>
