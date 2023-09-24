@@ -5,11 +5,10 @@ import { profileApi } from '../api/userApi';
 import { IProfile } from '../types/userApi.type';
 import { currentUserState } from '../recoil/atom/currentUserData';
 import { useRecoilValue } from 'recoil';
-import { useQuery } from '@tanstack/react-query';
-import { feedApi } from '../api/articlesApi';
 import ArticlePreview from '../components/ArticlePreview';
 import FollowButton from '../components/FollowButton';
 import Loading from '../components/Loading';
+import { useFavoritedArticles, useMyArticlesQuery } from '../hooks/profile';
 
 const Profile = () => {
   const user = useRecoilValue(currentUserState);
@@ -26,38 +25,14 @@ const Profile = () => {
     isRefetching: myTabIsRefetching,
     data: myArticlesData,
     refetch: myTabRefetch,
-  } = useQuery({
-    queryKey: ['myArticles'],
-    queryFn: async () => {
-      try {
-        if (username !== undefined) {
-          const response = await feedApi.getFeed({ author: username, offset: offset });
-          return response.data;
-        }
-      } catch (error) {
-        console.log(error);
-      }
-    },
-  });
+  } = useMyArticlesQuery(username, offset);
 
   const {
     isLoading: favoritedTabIsLoading,
     isRefetching: favoritedTabIsRefetching,
     data: favoritedArticlesData,
     refetch: favoritedTabRefecth,
-  } = useQuery({
-    queryKey: ['favorited'],
-    queryFn: async () => {
-      try {
-        if (username !== undefined) {
-          const response = await feedApi.getFeed({ favorited: username, offset: offset });
-          return response.data;
-        }
-      } catch (error) {
-        console.log(error);
-      }
-    },
-  });
+  } = useFavoritedArticles(username, offset);
 
   const getProfile = async () => {
     try {
@@ -75,8 +50,9 @@ const Profile = () => {
     setOffset(0);
   };
 
-  const onClickPageButton = (e: React.MouseEvent<HTMLLIElement>) => {
-    setOffset(e.target.innerText * 10 - 10);
+  const onClickPageButton = (buttonEvent: React.MouseEvent<HTMLLIElement>) => {
+    const pageNumber = Number((buttonEvent.target as HTMLLIElement).innerText);
+    setOffset(pageNumber * 10 - 10);
   };
 
   const pageButtonList = (articlesCount: number) => {

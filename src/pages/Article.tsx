@@ -1,13 +1,13 @@
 import Layout from '../components/layout/Layout';
 import { useRef } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { useQuery } from '@tanstack/react-query';
 import { articleApi, commentApi } from '../api/articlesApi';
 import { currentUserState } from '../recoil/atom/currentUserData';
 import { useRecoilValue } from 'recoil';
 import { INewCommentRequest } from '../types/articleApi.type';
 import FavoriteButton from '../components/FavoriteButton';
 import FollowButton from '../components/FollowButton';
+import { useArticleQuery, useCommentQuery } from '../hooks/article';
 
 const Article = () => {
   const user = useRecoilValue(currentUserState);
@@ -20,37 +20,9 @@ const Article = () => {
 
   const commentRef = useRef<HTMLTextAreaElement>(null);
 
-  const { data: articleData, isSuccess: articleIsSuccess } = useQuery({
-    queryKey: ['article', slug],
-    queryFn: async () => {
-      try {
-        if (slug !== undefined) {
-          const response = await articleApi.read(slug);
-          return response.data.article;
-        }
-      } catch (error) {
-        console.log(error);
-      }
-    },
-  });
+  const { data: articleData, isSuccess: articleIsSuccess } = useArticleQuery(slug);
 
-  const {
-    data: commentList,
-    refetch,
-    isSuccess: commentIsSuccess,
-  } = useQuery({
-    queryKey: ['comment', slug],
-    queryFn: async () => {
-      try {
-        if (slug !== undefined) {
-          const response = await commentApi.read(slug);
-          return response.data.comments;
-        }
-      } catch (error) {
-        console.log(error);
-      }
-    },
-  });
+  const { data: commentList, refetch, isSuccess: commentIsSuccess } = useCommentQuery(slug);
 
   const onSubmitCommentData = (formEvent: React.FormEvent<HTMLFormElement>) => {
     formEvent.preventDefault();
