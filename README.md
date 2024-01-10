@@ -12,15 +12,22 @@
 
 프로젝트 기간: 2023.05.20~2023.07.07
 
+리팩토링 기간: 2023.08~2023.09
+
 <h4> 😎 팀원 </h4>
 
 | [Bori (@nijuy)](https://github.com/nijuy)                  | [Poly (@indianaPoly)](https://github.com/indianaPoly)      |
 | ---------------------------------------------------------- | ---------------------------------------------------------- |
 |<img src="https://avatars.githubusercontent.com/u/87255462?v=4"/> | <img src="https://avatars.githubusercontent.com/u/95522176?v=4"/> |
 
+<h4> 👩‍💻 페어 프로그래밍 가이드라인 👨‍💻 </h4>
+1. 15분마다 역할 교체 <br/>
+2. Bori의 노트북으로 진행 (온라인일 경우 Live share 기능 사용)
+
 <h2> 🛠 기술 스택 </h2>
 
 `TypeScript` `Vite` `React` `react-router-dom` `axios` `recoil` `recoil-persist` `react-query` `qs`
+
 <h2> 📁 폴더 구조 </h2>
 
 ```
